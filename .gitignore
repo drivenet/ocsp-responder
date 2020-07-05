@@ -1,0 +1,7 @@
+*.suo
+*.user
+obj/
+bin/
+packages/
+.vs/
+launchSettings.json

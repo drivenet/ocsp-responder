@@ -1,0 +1,31 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace",
+      "blankLinesBetweenUsingGroups": "require",
+      "elementOrder": [
+        "kind",
+        "constant",
+        "accessibility",
+        "static",
+        "readonly"
+      ]
+    },
+    "maintainabilityRules": {
+      "topLevelTypes": [
+        "class",
+        "struct",
+        "interface",
+        "enum"
+      ]
+    },
+    "layoutRules": {
+      "newlineAtEndOfFile": "require",
+      "allowConsecutiveUsings": false
+    },
+    "documentationRules": {
+      "fileNamingConvention": "metadata"
+    }
+  }
+}

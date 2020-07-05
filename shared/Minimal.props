@@ -1,0 +1,45 @@
+﻿<Project>
+  <PropertyGroup Label="TopLevelPathDefaults">
+    <DnetSharedPath Condition="'$(DnetSharedPath)' == ''">$(MSBuildThisFileDirectory)</DnetSharedPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="AvailableTargetFrameworks">
+    <LegacyTargetFramework>net472</LegacyTargetFramework>
+    <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
+    <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
+    <ApplicationTargetFramework>netcoreapp2.1</ApplicationTargetFramework>
+    <NewApplicationTargetFramework>netcoreapp3.1</NewApplicationTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Label="MinimalProjectSettings">
+    <Authors>DRIVE.NET, Inc.</Authors>
+    <Product>DRIVE.NET, Inc. projects</Product>
+    <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
+    <Description>-</Description>
+    <NeutralLanguage>en</NeutralLanguage>
+    <CodeAnalysisRuleSet>$(DnetSharedPath)\Default.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+    <Configurations>$(Configurations);Integration</Configurations>
+    <DebugType>embedded</DebugType>
+    <Platforms>x64</Platforms>
+    <Platform>x64</Platform>
+    <NoWarn>IDE0057;IDE0060</NoWarn>
+    <WarningsAsErrors>CS8073;CS8597;CS8600;CS8601;CS8602;CS8603;CS8604;CS8605;CS8607;CS8618;CS8620;CS8624;CS8625;CS8631;CS8634;CS8655;CS8714;CS8762</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup Label="MinimalAnalyzerFiles">
+    <AdditionalFiles Include="$(DnetSharedPath)\stylecop.json">
+      <Link>stylecop.json</Link>
+      <Visible>false</Visible>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(DnetSharedPath)\CodeMetricsConfig.txt">
+      <Link>CodeMetricsConfig.txt</Link>
+      <Visible>false</Visible>
+    </AdditionalFiles>
+  </ItemGroup>
+
+  <ItemGroup Label="MinimalAnalyzerReferences">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+  </ItemGroup>
+</Project>
