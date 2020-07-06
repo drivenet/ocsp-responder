@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -22,19 +21,16 @@ namespace OcspResponder.Composition
         public static void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<ICaDescriptionSource>(_ =>
-            {
-                var descriptions = new CaDescriptions();
-                var fileName = "../../elastic-sub-ca-ocsp.pfx";
-                var password = Path.GetFileNameWithoutExtension(fileName);
-                var responder = new CaDescriptionLoader().Load(fileName, password);
-                descriptions.TryAdd(responder);
-                return descriptions;
-            });
+            services.AddSingleton<CaDescriptionStore>();
+            services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDescriptionStore>());
+            services.AddSingleton<CaDescriptionLoader>();
+            services.AddSingleton<OpenSslDbParser>();
+            services.AddSingleton<ResponderChainLoader>();
             services.AddSingleton<IOcspResponder, Core.OcspResponder>();
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
             services.AddSingleton<IOcspLogger, OcspLogger>();
             services.AddHostedService<PreheatingService>();
+            services.AddHostedService<DbLoadingService>();
         }
 
 #pragma warning disable CA1822 // Mark members as static -- future-proofing

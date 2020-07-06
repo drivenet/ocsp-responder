@@ -1,94 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
+using System.Numerics;
+using System.Text;
 
 using OcspResponder.Common;
-
-using static System.FormattableString;
 
 namespace OcspResponder.Implementation
 {
     internal sealed class CaDescriptionLoader
     {
-        public CaDescription Load(string fileName, string password)
+        private readonly OpenSslDbParser _dbParser;
+        private readonly ResponderChainLoader _chainLoader;
+
+        public CaDescriptionLoader(OpenSslDbParser dbParser, ResponderChainLoader chainLoader)
         {
-            var certificates = new X509Certificate2Collection();
+            _dbParser = dbParser ?? throw new ArgumentNullException(nameof(dbParser));
+            _chainLoader = chainLoader ?? throw new ArgumentNullException(nameof(chainLoader));
+        }
+
+        public DefaultCaDescription Load(string dbFileName, string certFileName, string password, DateTimeOffset now)
+        {
+            var records = LoadRecords(dbFileName, now);
+            var (caCertificate, responderCertificate) = _chainLoader.Load(certFileName, password);
             try
             {
-                certificates.Import(
-                    fileName,
-                    password,
-                    X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.Exportable);
-
-                if (certificates.Count != 2)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(certificates), certificates.Count, "The certificate file must contain exactly 2 certificates.");
-                }
-
-                var caCertificate = certificates[0];
-                ValidateCaCertificate(caCertificate);
-                var responderCertificate = certificates[1];
-                ValidateResponderCertificate(responderCertificate, caCertificate);
+#pragma warning disable CA2000 // Dispose objects before losing scope -- passed to CaDescription
                 var responderPrivateKey = responderCertificate.GetRSACngPrivateKey();
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
-                return new CaDescription(caCertificate, responderCertificate, responderPrivateKey);
+                return new DefaultCaDescription(caCertificate, responderCertificate, responderPrivateKey, records);
             }
-            catch (Exception exception)
+            catch
             {
-                foreach (var certificate in certificates)
-                {
-                    certificate.Dispose();
-                }
-
-                throw new InvalidDataException(Invariant($"Failed to load certificates from file \"{fileName}\"."), exception);
+                caCertificate.Dispose();
+                responderCertificate.Dispose();
+                throw;
             }
         }
 
-        private static void ValidateCaCertificate(X509Certificate2 caCertificate)
+        private IReadOnlyDictionary<BigInteger, CertificateRecord> LoadRecords(string dbFileName, DateTimeOffset now)
         {
-            var issuerExtensions = caCertificate.Extensions;
-            var isCertificateAuthority = issuerExtensions.OfType<X509BasicConstraintsExtension>().SingleOrDefault()?.CertificateAuthority ?? false;
-            if (!isCertificateAuthority)
+            IReadOnlyList<CertificateRecord> records;
+            using (var dbFile = new StreamReader(File.Open(dbFileName, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.ASCII, false, 256))
             {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), caCertificate.Thumbprint, "The certificate does not represent a CA.");
+                records = _dbParser.Parse(dbFile, now);
             }
 
-            var keyUsages = issuerExtensions.OfType<X509KeyUsageExtension>().SingleOrDefault()?.KeyUsages ?? X509KeyUsageFlags.None;
-            if ((keyUsages & (X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign)) != (X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign))
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), caCertificate.Thumbprint, "The certificate does not represent a key+CRL signing CA.");
-            }
-
-            caCertificate.Verify();
-        }
-
-        private static void ValidateResponderCertificate(X509Certificate2 responderCertificate, X509Certificate2 caCertificate)
-        {
-            if (responderCertificate.Issuer != caCertificate.Subject)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate was not issued by CA represented by the first one.");
-            }
-
-            var responderExtensions = responderCertificate.Extensions;
-            var isCertificateAuthority = responderExtensions.OfType<X509BasicConstraintsExtension>().SingleOrDefault()?.CertificateAuthority ?? false;
-            if (isCertificateAuthority)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate represents a CA.");
-            }
-
-            var keyUsages = responderExtensions.OfType<X509KeyUsageExtension>().SingleOrDefault()?.KeyUsages ?? X509KeyUsageFlags.None;
-            if ((keyUsages & X509KeyUsageFlags.DigitalSignature) != X509KeyUsageFlags.DigitalSignature)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate cannot produce digital signatures.");
-            }
-
-            var ekus = (responderExtensions.OfType<X509EnhancedKeyUsageExtension>().SingleOrDefault()?.EnhancedKeyUsages ?? new OidCollection()).Cast<Oid>();
-            if (!ekus.Any(eku => eku.FriendlyName == "OCSP Signing"))
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate cannot sign OCSP responses.");
-            }
+            return records.ToDictionary(record => record.Serial);
         }
     }
 }

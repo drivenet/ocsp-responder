@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -36,22 +38,33 @@ namespace OcspResponder.Implementation
 
         public Task<AsymmetricAlgorithm> GetResponderPrivateKey(X509Certificate2 caCertificate)
         {
-            var responder = _caDescriptions.Get(caCertificate);
-            return Task.FromResult(responder.ResponderPrivateKey);
+            var description = _caDescriptions.Get(caCertificate);
+            return Task.FromResult(description.ResponderPrivateKey);
         }
 
         public Task<CaCompromisedStatus> IsCaCompromised(X509Certificate2 caCertificate) => CaStatus;
 
         public Task<bool> SerialExists(string serial, X509Certificate2 issuerCertificate)
         {
-            //FIXME: validate cert db
-            return Task.FromResult(true);
+            var exists = _caDescriptions.Fetch(issuerCertificate)?.Fetch(GetSerialNumber(serial)) is object;
+            return Task.FromResult(exists);
         }
 
         public Task<CertificateRevocationStatus> SerialIsRevoked(string serial, X509Certificate2 issuerCertificate)
         {
-            //FIXME: validate cert db
-            return Task.FromResult(new CertificateRevocationStatus());
+            var revokedOn = _caDescriptions.Fetch(issuerCertificate)?.Fetch(GetSerialNumber(serial))?.RevokedOn;
+            var status = revokedOn is { } date
+                ? new CertificateRevocationStatus
+                {
+                    IsRevoked = true,
+                    RevokedInfo = new RevokedInfo { Date = date, Reason = RevocationReason.Unspecified },
+                }
+                : new CertificateRevocationStatus();
+
+            return Task.FromResult(status);
         }
+
+        private static BigInteger GetSerialNumber(string serial)
+            => BigInteger.Parse(serial, NumberStyles.None, NumberFormatInfo.InvariantInfo);
     }
 }
