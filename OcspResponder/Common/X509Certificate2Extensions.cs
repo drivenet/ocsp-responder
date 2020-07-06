@@ -10,7 +10,7 @@ namespace OcspResponder.Common
         // Unsecure intentionally since export/import is done in-memory and password is auto-generated
         private static readonly PbeParameters ExportParameters = new PbeParameters(PbeEncryptionAlgorithm.Aes128Cbc, HashAlgorithmName.SHA1, 1);
 
-        public static AsymmetricAlgorithm GetRSACngPrivateKey(this X509Certificate2 certificate)
+        public static RSA GetRSACngPrivateKey(this X509Certificate2 certificate)
         {
             var keyBytes = new byte[64];
             _rng.GetBytes(keyBytes);
