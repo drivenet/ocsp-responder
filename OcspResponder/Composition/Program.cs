@@ -64,7 +64,7 @@ namespace OcspResponder.Composition
             {
                 loggingBuilder.AddJournal(options =>
                 {
-                    options.SyslogIdentifier = "gridfs-server";
+                    options.SyslogIdentifier = "ocsp-responder";
                     options.DropWhenBusy = true;
                 });
             }
