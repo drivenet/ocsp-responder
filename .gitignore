@@ -5,3 +5,4 @@ bin/
 packages/
 .vs/
 launchSettings.json
+db/
