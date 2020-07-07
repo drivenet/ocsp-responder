@@ -1,0 +1,14 @@
+.*/
+**/.dockerignore
+**/.gitignore
+
+**/*.csproj.user
+**/*.cmd
+
+**/obj/
+**/bin/
+
+**/launchSettings.json
+
+db/
+packages/
