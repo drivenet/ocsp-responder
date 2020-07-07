@@ -1,4 +1,5 @@
 ﻿{
-  "urls": "http://localhost:9999",
+  "urls": "http://localhost:5000",
   "forceConsoleLogging": false,
+  "maxConcurrentConnections": 0,
 }
