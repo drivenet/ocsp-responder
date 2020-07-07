@@ -2,9 +2,9 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Entities
 {
-    internal abstract class CaDescription
+    public abstract class CaDescription
     {
         public abstract X509Certificate2 CaCertificate { get; }
 

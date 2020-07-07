@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Numerics;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Entities
 {
-    internal sealed class CertificateRecord
+    public sealed class CertificateRecord
     {
         public CertificateRecord(BigInteger serial, DateTimeOffset? revokedOn)
         {

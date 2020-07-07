@@ -6,8 +6,9 @@ using System.Numerics;
 using System.Text;
 
 using OcspResponder.Common;
+using OcspResponder.Entities;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Infrastructure
 {
     internal sealed class CaDescriptionLoader
     {

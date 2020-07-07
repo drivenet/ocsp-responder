@@ -3,23 +3,20 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Services
 {
     internal sealed class BackgroundUpdaterService : IHostedService, IDisposable
     {
         private static readonly TimeSpan Interval = TimeSpan.FromSeconds(10);
 
-        private readonly CaDescriptionUpdater _updater;
-        private readonly ILogger _logger;
+        private readonly ICaDescriptionsLoader _loader;
         private readonly Timer _timer;
         private readonly TaskCompletionSource<bool> _tcs = new TaskCompletionSource<bool>();
 
-        public BackgroundUpdaterService(CaDescriptionUpdater updater, ILogger<BackgroundUpdaterService> logger)
+        public BackgroundUpdaterService(ICaDescriptionsLoader loader)
         {
-            _updater = updater ?? throw new ArgumentNullException(nameof(updater));
-            _logger = logger;
+            _loader = loader ?? throw new ArgumentNullException(nameof(loader));
             _timer = new Timer(Process);
         }
 
@@ -71,15 +68,16 @@ namespace OcspResponder.Implementation
         {
             try
             {
-                _updater.Update();
-                _tcs.TrySetResult(true);
+                _loader.Load();
             }
 #pragma warning disable CA1031 // Do not catch general exception types -- required for robustness
-            catch (Exception exception)
+            catch
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                _logger.LogError(EventIds.UpdateFailed, exception, "Failed to update CA description.");
+                return;
             }
+
+            _tcs.TrySetResult(true);
         }
 
         private void Process(object? state)
@@ -102,11 +100,6 @@ namespace OcspResponder.Implementation
                     Monitor.Exit(_timer);
                 }
             }
-        }
-
-        private static class EventIds
-        {
-            public static readonly EventId UpdateFailed = new EventId(1, nameof(UpdateFailed));
         }
     }
 }

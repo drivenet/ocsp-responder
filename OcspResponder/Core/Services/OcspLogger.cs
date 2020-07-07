@@ -2,15 +2,13 @@
 
 using Microsoft.Extensions.Logging;
 
-using OcspResponder.Core;
-
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Services
 {
     internal sealed class OcspLogger : IOcspLogger
     {
         private readonly ILogger _logger;
 
-        public OcspLogger(ILogger<Core.OcspResponder> logger)
+        public OcspLogger(ILogger<OcspResponder> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

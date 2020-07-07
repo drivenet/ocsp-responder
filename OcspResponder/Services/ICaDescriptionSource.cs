@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-namespace OcspResponder.Implementation
+using OcspResponder.Entities;
+
+namespace OcspResponder.Services
 {
-    internal interface ICaDescriptionSource
+    public interface ICaDescriptionSource
     {
         IEnumerable<X509Certificate2> CaCertificates { get; }
 
         CaDescription? Fetch(X509Certificate2 certificate);
-
-        CaDescription Get(X509Certificate2 caCertificate);
     }
 }

@@ -4,11 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Numerics;
 
+using OcspResponder.Entities;
+
 using Org.BouncyCastle.Utilities.Encoders;
 
 using static System.FormattableString;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Infrastructure
 {
     internal sealed class OpenSslDbParser
     {

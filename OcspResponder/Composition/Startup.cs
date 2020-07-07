@@ -5,9 +5,12 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using OcspResponder.Core;
-using OcspResponder.Implementation;
+using OcspResponder.Core.Infrastructure;
+using OcspResponder.Core.Services;
+using OcspResponder.Services;
 
 namespace OcspResponder.Composition
 {
@@ -28,8 +31,16 @@ namespace OcspResponder.Composition
             services.AddControllers();
             services.AddSingleton<CaDescriptionStore>();
             services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDescriptionStore>());
+            services.AddSingleton<ICaDescriptionUpdater>(
+                provider => new LoggingCaDescriptionUpdater(
+                    provider.GetRequiredService<CaDescriptionStore>(),
+                    provider.GetRequiredService<ILogger<ICaDescriptionUpdater>>()));
             services.AddSingleton<CaDescriptionLoader>();
-            services.AddSingleton<CaDescriptionUpdater>();
+            services.AddSingleton<CaDescriptionsLoader>();
+            services.AddSingleton<ICaDescriptionsLoader>(
+                provider => new LoggingCaDescriptionsLoader(
+                    provider.GetRequiredService<CaDescriptionsLoader>(),
+                    provider.GetRequiredService<ILogger<ICaDescriptionsLoader>>()));
             services.AddSingleton(_ => new CaDescriptionFilesSource(fullPath));
             services.AddSingleton<OpenSslDbParser>();
             services.AddSingleton(_ => new ResponderChainLoader(password));

@@ -6,13 +6,12 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-using OcspResponder.Core;
+using OcspResponder.Services;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Services
 {
     internal sealed class OcspResponderRepository : IOcspResponderRepository
     {
-        private static readonly Task<CaCompromisedStatus> CaStatus = Task.FromResult(new CaCompromisedStatus());
         private static readonly TimeSpan ResponseLifetime = TimeSpan.FromDays(7);
 
         private readonly ICaDescriptionSource _caDescriptions;
@@ -42,7 +41,7 @@ namespace OcspResponder.Implementation
             return Task.FromResult(description.ResponderPrivateKey);
         }
 
-        public Task<CaCompromisedStatus> IsCaCompromised(X509Certificate2 caCertificate) => CaStatus;
+        public Task<CaCompromisedStatus> IsCaCompromised(X509Certificate2 caCertificate) => Task.FromResult(new CaCompromisedStatus());
 
         public Task<bool> SerialExists(string serial, X509Certificate2 issuerCertificate)
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Infrastructure
 {
     internal sealed class CaDescriptionFilePaths
     {

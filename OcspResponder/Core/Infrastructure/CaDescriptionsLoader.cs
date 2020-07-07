@@ -1,35 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Microsoft.Extensions.Logging;
-
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Infrastructure
 {
-    internal sealed class CaDescriptionUpdater : IDisposable
+    internal sealed class CaDescriptionsLoader : IDisposable, ICaDescriptionsLoader
     {
-        private readonly CaDescriptionStore _store;
+        private readonly ICaDescriptionUpdater _updater;
         private readonly CaDescriptionLoader _loader;
         private readonly CaDescriptionFilesSource _fileSource;
-        private readonly ILogger _logger;
         private IDisposable? _cleanup;
 
-        public CaDescriptionUpdater(CaDescriptionStore store, CaDescriptionLoader loader, CaDescriptionFilesSource fileSource, ILogger<CaDescriptionUpdater> logger)
+        public CaDescriptionsLoader(ICaDescriptionUpdater updater, CaDescriptionLoader loader, CaDescriptionFilesSource fileSource)
         {
-            _store = store ?? throw new ArgumentNullException(nameof(store));
+            _updater = updater ?? throw new ArgumentNullException(nameof(updater));
             _loader = loader ?? throw new ArgumentNullException(nameof(loader));
             _fileSource = fileSource ?? throw new ArgumentNullException(nameof(fileSource));
-            _logger = logger;
         }
 
         public void Dispose()
         {
-            _store.Dispose();
             _cleanup?.Dispose();
         }
 
-        public void Update()
+        public void Load()
         {
             if (_cleanup is { } cleanup)
             {
@@ -48,13 +42,7 @@ namespace OcspResponder.Implementation
             var descriptions = files
                 .Select(file => _loader.Load(file.DbFilePath, file.CertFilePath, now))
                 .ToList();
-            _logger.LogInformation(EventIds.UpdatingDescriptions, "Updating descriptions, count: {Count}", count);
-            _cleanup = _store.Update(descriptions);
-        }
-
-        private static class EventIds
-        {
-            public static readonly EventId UpdatingDescriptions = new EventId(1, nameof(UpdatingDescriptions));
+            _cleanup = _updater.Update(descriptions);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 using static System.FormattableString;
 
-namespace OcspResponder.Implementation
+namespace OcspResponder.Core.Infrastructure
 {
     internal sealed class ResponderChainLoader
     {

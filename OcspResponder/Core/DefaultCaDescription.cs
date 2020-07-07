@@ -4,9 +4,11 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace OcspResponder.Implementation
+using OcspResponder.Entities;
+
+namespace OcspResponder.Core
 {
-    internal sealed class DefaultCaDescription : CaDescription, IDisposable
+    public sealed class DefaultCaDescription : CaDescription, IDisposable
     {
         private readonly IReadOnlyDictionary<BigInteger, CertificateRecord> _records;
 
