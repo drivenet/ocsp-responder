@@ -23,14 +23,14 @@ namespace OcspResponder.Core.Infrastructure
             }
             catch (Exception exception)
             {
-                _logger.LogError(EventIds.UpdateFailed, exception, "Failed to update CA description.");
+                _logger.LogError(EventIds.LoadFailed, exception, "Failed to load CA description.");
                 throw;
             }
         }
 
         private static class EventIds
         {
-            public static readonly EventId UpdateFailed = new EventId(1, nameof(UpdateFailed));
+            public static readonly EventId LoadFailed = new EventId(1, nameof(LoadFailed));
         }
     }
 }
