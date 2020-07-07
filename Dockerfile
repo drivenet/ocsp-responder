@@ -8,15 +8,15 @@ COPY shared shared
 
 WORKDIR /src/OcspResponder
 COPY OcspResponder/OcspResponder.csproj .
-RUN dotnet restore
+RUN dotnet restore -r linux-x64 -p:MinimalBuild=true
 
 WORKDIR /src/OcspResponder
 COPY OcspResponder .
-RUN dotnet publish -c Release --no-restore -o /app && \
-    find /app -type f -executable -not -wholename /app/ocsp-responder -exec chmod a-x -- {} +
+RUN dotnet publish -c Release -r linux-x64 --self-contained false --no-restore -p:MinimalBuild=true -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app .
 ENV OCSPR_HOST_URLS=http://+:80
+ENV OCSPR_APP_DATABASEPATH=/db
 ENTRYPOINT ./ocsp-responder

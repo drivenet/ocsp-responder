@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+#if !MINIMAL_BUILD
 using Tmds.Systemd;
+#endif
 
 namespace OcspResponder.Composition
 {
@@ -26,7 +28,7 @@ namespace OcspResponder.Composition
         private static IConfiguration LoadAppConfiguration(string configPath)
             => new ConfigurationBuilder()
                 .AddJsonFile(configPath, optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables("OCSPR_")
+                .AddEnvironmentVariables("OCSPR_APP_")
                 .Build();
 
         private static CommandLineOptions GetCommandLineOptions(string[] args)
@@ -44,13 +46,23 @@ namespace OcspResponder.Composition
 
         private static IHost BuildHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
             => new HostBuilder()
-                .ConfigureWebHost(webHost => webHost
-                    .UseUrls(hostingOptions.Urls)
-                    .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
-                    .UseLibuv()
-                    .UseStartup<Startup>())
+                .ConfigureWebHost(webHost =>
+                {
+                    webHost
+                        .UseUrls(hostingOptions.Urls)
+                        .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
+                        .UseStartup<Startup>();
+#if !MINIMAL_BUILD
+                    if (!hostingOptions.NoLibUv)
+                    {
+                        webHost.UseLibuv();
+                    }
+#endif
+                })
                 .ConfigureLogging(loggingBuilder => ConfigureLogging(loggingBuilder, hostingOptions))
+#if !MINIMAL_BUILD
                 .UseSystemd()
+#endif
                 .ConfigureAppConfiguration(configBuilder => configBuilder.AddConfiguration(appConfiguration))
                 .Build();
 
@@ -59,6 +71,7 @@ namespace OcspResponder.Composition
             loggingBuilder.AddFilter(
                 (category, level) => level >= LogLevel.Warning
                     || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
+#if !MINIMAL_BUILD
             if (Journal.IsSupported)
             {
                 loggingBuilder.AddJournal(options =>
@@ -67,8 +80,11 @@ namespace OcspResponder.Composition
                     options.DropWhenBusy = true;
                 });
             }
+#endif
 
+#if !MINIMAL_BUILD
             if (hostingOptions.ForceConsoleLogging || !Journal.IsAvailable)
+#endif
             {
                 loggingBuilder.AddConsole(options => options.DisableColors = true);
             }

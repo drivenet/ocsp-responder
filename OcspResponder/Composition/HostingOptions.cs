@@ -21,6 +21,12 @@
 
         public ushort MaxConcurrentConnections { get; set; }
 
+#if !MINIMAL_BUILD
         public bool ForceConsoleLogging { get; set; }
+#endif
+
+#if !MINIMAL_BUILD
+        public bool NoLibUv { get; set; }
+#endif
     }
 }
