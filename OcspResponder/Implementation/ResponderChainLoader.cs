@@ -10,14 +10,21 @@ namespace OcspResponder.Implementation
 {
     internal sealed class ResponderChainLoader
     {
-        public (X509Certificate2 CaCertificate, X509Certificate2 ResponderCertificate) Load(string fileName, string password)
+        private readonly string _password;
+
+        public ResponderChainLoader(string password)
+        {
+            _password = password ?? throw new ArgumentNullException(nameof(password));
+        }
+
+        public (X509Certificate2 CaCertificate, X509Certificate2 ResponderCertificate) Load(string fileName)
         {
             var certificates = new X509Certificate2Collection();
             try
             {
                 certificates.Import(
                     fileName,
-                    password,
+                    _password,
                     X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.Exportable);
 
                 var count = certificates.Count;

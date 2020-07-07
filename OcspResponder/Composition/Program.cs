@@ -26,6 +26,7 @@ namespace OcspResponder.Composition
         private static IConfiguration LoadAppConfiguration(string configPath)
             => new ConfigurationBuilder()
                 .AddJsonFile(configPath, optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables("OCSPR_")
                 .Build();
 
         private static CommandLineOptions GetCommandLineOptions(string[] args)

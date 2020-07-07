@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Extensions.Logging;
 
@@ -43,15 +44,10 @@ namespace OcspResponder.Implementation
                 throw new InvalidDataException("No CA descriptions to load were found.");
             }
 
-            var descriptions = new List<DefaultCaDescription>();
             var now = DateTimeOffset.UtcNow;
-            foreach (var file in files)
-            {
-                var password = Path.GetFileNameWithoutExtension(file.CertFilePath);
-                var description = _loader.Load(file.DbFilePath, file.CertFilePath, password, now);
-                descriptions.Add(description);
-            }
-
+            var descriptions = files
+                .Select(file => _loader.Load(file.DbFilePath, file.CertFilePath, now))
+                .ToList();
             _logger.LogInformation(EventIds.UpdatingDescriptions, "Updating descriptions, count: {Count}", count);
             _cleanup = _store.Update(descriptions);
         }
