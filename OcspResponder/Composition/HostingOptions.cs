@@ -2,11 +2,11 @@
 {
     internal sealed class HostingOptions
     {
-        private string? _listen;
+        private string? _urls;
 
-        public string? Listen
+        public string? Urls
         {
-            get => _listen;
+            get => _urls;
             set
             {
                 var listen = value?.Trim();
@@ -15,7 +15,7 @@
                     listen = null;
                 }
 
-                _listen = listen;
+                _urls = listen;
             }
         }
 

@@ -25,7 +25,7 @@ namespace OcspResponder.Composition
 
         private static IConfiguration LoadAppConfiguration(string configPath)
             => new ConfigurationBuilder()
-                .AddJsonFile(configPath, optional: false, reloadOnChange: true)
+                .AddJsonFile(configPath, optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables("OCSPR_")
                 .Build();
 
@@ -37,14 +37,15 @@ namespace OcspResponder.Composition
 
         private static HostingOptions GetHostingOptions(string configPath)
             => new ConfigurationBuilder()
-                .AddJsonFile(configPath, optional: false)
+                .AddJsonFile(configPath, optional: true)
+                .AddEnvironmentVariables("OCSPR_HOST_")
                 .Build()
                 .Get<HostingOptions>() ?? new HostingOptions();
 
         private static IHost BuildHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
             => new HostBuilder()
                 .ConfigureWebHost(webHost => webHost
-                    .UseUrls(hostingOptions.Listen)
+                    .UseUrls(hostingOptions.Urls)
                     .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
                     .UseLibuv()
                     .UseStartup<Startup>())

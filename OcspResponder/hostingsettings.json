@@ -1,4 +1,4 @@
 ﻿{
-  "listen": "http://localhost:9999",
+  "urls": "http://localhost:9999",
   "forceConsoleLogging": false,
 }
