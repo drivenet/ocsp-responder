@@ -66,7 +66,9 @@ namespace OcspResponder.Composition
                 .ConfigureAppConfiguration(configBuilder => configBuilder.AddConfiguration(appConfiguration))
                 .Build();
 
+#pragma warning disable CA1801 // Review unused parameters -- conditional compilation
         private static void ConfigureLogging(ILoggingBuilder loggingBuilder, HostingOptions hostingOptions)
+#pragma warning restore CA1801 // Review unused parameters
         {
             loggingBuilder.AddFilter(
                 (category, level) => level >= LogLevel.Warning
