@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,21 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace OcspResponder.Implementation
 {
-    internal sealed class DbLoadingService : IHostedService, IDisposable
+    internal sealed class BackgroundUpdaterService : IHostedService, IDisposable
     {
         private static readonly TimeSpan Interval = TimeSpan.FromSeconds(10);
 
-        private readonly CaDescriptionStore _store;
-        private readonly CaDescriptionLoader _loader;
+        private readonly CaDescriptionUpdater _updater;
         private readonly ILogger _logger;
         private readonly Timer _timer;
         private readonly TaskCompletionSource<bool> _tcs = new TaskCompletionSource<bool>();
-        private IDisposable? _cleanup;
 
-        public DbLoadingService(CaDescriptionStore store, CaDescriptionLoader loader, ILogger<DbLoadingService> logger)
+        public BackgroundUpdaterService(CaDescriptionUpdater updater, ILogger<BackgroundUpdaterService> logger)
         {
-            _store = store ?? throw new ArgumentNullException(nameof(store));
-            _loader = loader ?? throw new ArgumentNullException(nameof(loader));
+            _updater = updater ?? throw new ArgumentNullException(nameof(updater));
             _logger = logger;
             _timer = new Timer(Process);
         }
@@ -69,33 +65,20 @@ namespace OcspResponder.Implementation
                 }
             }
             while (!cancellationToken.IsCancellationRequested);
-
-            _store.Dispose();
-            _cleanup?.Dispose();
         }
 
         private void Update()
         {
             try
             {
-                if (_cleanup is { } cleanup)
-                {
-                    _cleanup = null;
-                    cleanup.Dispose();
-                }
-
-                var now = DateTimeOffset.UtcNow;
-                var dbFileName = "../../elastic-sub-ca.db";
-                var certFileName = "../../elastic-sub-ca-ocsp.pfx";
-                var password = Path.GetFileNameWithoutExtension(certFileName);
-                var description = _loader.Load(dbFileName, certFileName, password, now);
-                _cleanup = _store.Update(new[] { description });
-                _tcs.SetResult(true);
+                _updater.Update();
+                _tcs.TrySetResult(true);
             }
+#pragma warning disable CA1031 // Do not catch general exception types -- required for robustness
             catch (Exception exception)
+#pragma warning restore CA1031 // Do not catch general exception types
             {
-                _logger.LogError(EventIds.LoadFailed, exception, "Failed to load certificate database.");
-                throw;
+                _logger.LogError(EventIds.UpdateFailed, exception, "Failed to update CA description.");
             }
         }
 
@@ -123,7 +106,7 @@ namespace OcspResponder.Implementation
 
         private static class EventIds
         {
-            public static readonly EventId LoadFailed = new EventId(1, nameof(LoadFailed));
+            public static readonly EventId UpdateFailed = new EventId(1, nameof(UpdateFailed));
         }
     }
 }

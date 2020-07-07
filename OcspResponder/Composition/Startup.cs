@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -24,13 +25,14 @@ namespace OcspResponder.Composition
             services.AddSingleton<CaDescriptionStore>();
             services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDescriptionStore>());
             services.AddSingleton<CaDescriptionLoader>();
+            services.AddSingleton<CaDescriptionUpdater>();
+            services.AddSingleton(_ => new CaDescriptionFilesSource(Path.GetFullPath("../..")));
             services.AddSingleton<OpenSslDbParser>();
             services.AddSingleton<ResponderChainLoader>();
             services.AddSingleton<IOcspResponder, Core.OcspResponder>();
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
             services.AddSingleton<IOcspLogger, OcspLogger>();
-            services.AddHostedService<PreheatingService>();
-            services.AddHostedService<DbLoadingService>();
+            services.AddHostedService<BackgroundUpdaterService>();
         }
 
 #pragma warning disable CA1822 // Mark members as static -- future-proofing
