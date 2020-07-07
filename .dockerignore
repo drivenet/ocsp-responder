@@ -12,3 +12,5 @@
 
 db/
 packages/
+
+OcspResponder/*settings.json
