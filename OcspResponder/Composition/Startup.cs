@@ -25,7 +25,7 @@ namespace OcspResponder.Composition
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var databasePath = _configuration.GetValue<string>("databasePath") ?? throw new ArgumentException("Missing database path.");
+            var databasePath = _configuration.GetValue("databasePath", "db");
             var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", databasePath));
             var password = _configuration.GetValue<string>("certificatePassword") ?? throw new ArgumentException("Missing certificate password.");
             services.AddControllers();
