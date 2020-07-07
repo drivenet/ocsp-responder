@@ -12,7 +12,8 @@ RUN dotnet restore -r linux-x64 -p:MinimalBuild=true
 
 WORKDIR /src/OcspResponder
 COPY OcspResponder .
-RUN dotnet publish -c Release -r linux-x64 --self-contained false --no-restore -p:MinimalBuild=true -o /app
+RUN dotnet publish -c Release -r linux-x64 --self-contained false --no-restore -p:MinimalBuild=true -o /app && \
+    rm /app/web.config /app/*.deps.json
 
 FROM base AS final
 WORKDIR /app
