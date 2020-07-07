@@ -59,8 +59,7 @@ namespace OcspResponder.Composition
             loggingBuilder.AddFilter(
                 (category, level) => level >= LogLevel.Warning
                     || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
-            var hasJournalD = Journal.IsSupported;
-            if (hasJournalD)
+            if (Journal.IsSupported)
             {
                 loggingBuilder.AddJournal(options =>
                 {
@@ -69,7 +68,7 @@ namespace OcspResponder.Composition
                 });
             }
 
-            if (!hasJournalD || hostingOptions.ForceConsoleLogging)
+            if (hostingOptions.ForceConsoleLogging || !Journal.IsAvailable)
             {
                 loggingBuilder.AddConsole(options => options.DisableColors = true);
             }
