@@ -4,7 +4,8 @@ This is a simple OCSP responder (see [RFC6960](https://tools.ietf.org/html/rfc69
 I needed an OCSP responder for our internal PKI and found a [wonderful library](https://github.com/gabrielcalegari/OCSPResponder) that simplified the development a lot.
 
 ## Configuration
-It can be configured with `hostingsettings.json` + `appsettings.json` (paths are configurable via command line), also with `OCSPR_HOST_...` and `OCSPR_APP_...` environment variables.
+The responder itself can be configured with `appsettings.json` along with `OCSPR_...` environment variables, when configuration file is used, it is automatically reloaded on change.
+The web host is configured from command line only (see HostingOptions and generic ASP.NET Core parameters like `--urls`).
 
 ## Systemd
 It has full support for running via `systemd`, including `Type=notify` unit, socket inheritance via Libuv, journald logging, etc.
