@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 using OcspResponder.CaDatabase.Services;
@@ -33,16 +32,10 @@ namespace OcspResponder.CaDatabase.Core.Services
                 cleanup.Dispose();
             }
 
-            var files = _fileSource.GetPaths();
-            var count = files.Count;
-            if (count == 0)
-            {
-                throw new InvalidDataException("No CA descriptions were found.");
-            }
-
+            var paths = _fileSource.GetPaths();
             var now = DateTimeOffset.UtcNow;
-            var descriptions = files
-                .Select(file => _loader.Load(file.DbFilePath, file.CertFilePath, now))
+            var descriptions = paths
+                .Select(path => _loader.Load(path, now))
                 .ToList();
             _cleanup = _updater.Update(descriptions);
         }

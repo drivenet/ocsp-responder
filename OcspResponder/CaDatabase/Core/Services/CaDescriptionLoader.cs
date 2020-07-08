@@ -21,10 +21,10 @@ namespace OcspResponder.CaDatabase.Core.Services
             _chainLoader = chainLoader ?? throw new ArgumentNullException(nameof(chainLoader));
         }
 
-        public DefaultCaDescription Load(string dbFileName, string certFileName, DateTimeOffset now)
+        public DefaultCaDescription Load(CaDescriptionPaths paths, DateTimeOffset now)
         {
-            var records = LoadRecords(dbFileName, now);
-            var (caCertificate, responderCertificate) = _chainLoader.Load(certFileName);
+            var records = LoadRecords(paths.DbFilePath, now);
+            var (caCertificate, responderCertificate) = _chainLoader.Load(paths.CertFilePath);
             try
             {
 #pragma warning disable CA2000 // Dispose objects before losing scope -- passed to CaDescription
