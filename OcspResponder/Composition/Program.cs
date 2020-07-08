@@ -17,30 +17,22 @@ namespace OcspResponder.Composition
     {
         public static async Task Main(string[] args)
         {
-            var commandLineOptions = GetCommandLineOptions(args);
-            var appConfiguration = LoadAppConfiguration(commandLineOptions.Config);
-            var hostingConfigPath = commandLineOptions.HostingConfig;
-            var hostingOptions = GetHostingOptions(hostingConfigPath);
+            var hostingOptions = GetHostingOptions(args);
+            var appConfiguration = LoadAppConfiguration(hostingOptions.Config, args);
             using var host = BuildHost(hostingOptions, appConfiguration);
             await host.RunAsync();
         }
 
-        private static IConfiguration LoadAppConfiguration(string configPath)
+        private static IConfiguration LoadAppConfiguration(string configPath, string[] args)
             => new ConfigurationBuilder()
                 .AddJsonFile(configPath, optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables("OCSPR_APP_")
+                .AddEnvironmentVariables("OCSPR_")
+                .AddCommandLine(args)
                 .Build();
 
-        private static CommandLineOptions GetCommandLineOptions(string[] args)
+        private static HostingOptions GetHostingOptions(string[] args)
             => new ConfigurationBuilder()
                 .AddCommandLine(args)
-                .Build()
-                .Get<CommandLineOptions>() ?? new CommandLineOptions();
-
-        private static HostingOptions GetHostingOptions(string configPath)
-            => new ConfigurationBuilder()
-                .AddJsonFile(configPath, optional: true)
-                .AddEnvironmentVariables("OCSPR_HOST_")
                 .Build()
                 .Get<HostingOptions>() ?? new HostingOptions();
 
@@ -49,7 +41,6 @@ namespace OcspResponder.Composition
                 .ConfigureWebHost(webHost =>
                 {
                     webHost
-                        .UseUrls(hostingOptions.Urls)
                         .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
                         .UseStartup<Startup>();
 #if !MINIMAL_BUILD
@@ -102,13 +93,10 @@ namespace OcspResponder.Composition
             options.Limits.MaxRequestBodySize = 65536;
             options.Limits.MaxRequestHeadersTotalSize = 4096;
 
-            if (hostingOptions is object)
+            var maxConcurrentConnections = hostingOptions.MaxConcurrentConnections;
+            if (maxConcurrentConnections != 0)
             {
-                var maxConcurrentConnections = hostingOptions.MaxConcurrentConnections;
-                if (maxConcurrentConnections != 0)
-                {
-                    options.Limits.MaxConcurrentConnections = maxConcurrentConnections;
-                }
+                options.Limits.MaxConcurrentConnections = maxConcurrentConnections;
             }
 
             options.UseSystemd();

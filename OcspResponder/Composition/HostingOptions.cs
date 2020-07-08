@@ -2,24 +2,15 @@
 {
     internal sealed class HostingOptions
     {
-        private string? _urls;
+        private string? _config;
 
-        public string? Urls
+        public string Config
         {
-            get => _urls;
-            set
-            {
-                var listen = value?.Trim();
-                if (listen is object && listen.Length == 0)
-                {
-                    listen = null;
-                }
-
-                _urls = listen;
-            }
+            get => string.IsNullOrWhiteSpace(_config) ? "appsettings.json" : _config;
+            set => _config = value;
         }
 
-        public ushort MaxConcurrentConnections { get; set; }
+        public ushort MaxConcurrentConnections { get; set; } = 100;
 
 #if !MINIMAL_BUILD
         public bool ForceConsoleLogging { get; set; }

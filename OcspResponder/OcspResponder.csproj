@@ -22,8 +22,5 @@
     <Content Update="appsettings.json">
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
-    <Content Update="hostingsettings.json">
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 </Project>
