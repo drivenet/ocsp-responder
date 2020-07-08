@@ -9,7 +9,7 @@ using OcspResponder.Core;
 namespace OcspResponder.Controllers
 {
     [Route("")]
-    public class OcspController : Controller
+    public sealed class OcspController : Controller
     {
         private readonly IOcspResponder _ocspResponder;
 

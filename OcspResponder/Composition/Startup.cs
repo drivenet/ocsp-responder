@@ -1,19 +1,22 @@
 ﻿using System;
-using System.Diagnostics;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using OcspResponder.CaDatabase.Core;
+using OcspResponder.CaDatabase.Core.Infrastructure;
+using OcspResponder.CaDatabase.Core.Services;
+using OcspResponder.CaDatabase.Services;
 using OcspResponder.Core;
-using OcspResponder.Core.Infrastructure;
-using OcspResponder.Core.Services;
-using OcspResponder.Services;
+using OcspResponder.Responder.Core;
+using OcspResponder.Responder.Core.Infrastructure;
+using OcspResponder.Responder.Core.Services;
 
 namespace OcspResponder.Composition
 {
-    public class Startup
+    public sealed class Startup
     {
         private readonly IConfiguration _configuration;
 
@@ -25,11 +28,11 @@ namespace OcspResponder.Composition
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<CaDatabase>();
-            services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDatabase>());
+            services.AddSingleton<CaDatabaseStore>();
+            services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDatabaseStore>());
             services.AddSingleton<ICaDatabaseUpdater>(
                 provider => new LoggingCaDatabaseUpdater(
-                    provider.GetRequiredService<CaDatabase>(),
+                    provider.GetRequiredService<CaDatabaseStore>(),
                     provider.GetRequiredService<ILogger<ICaDatabaseUpdater>>()));
             services.AddSingleton<CaDescriptionLoader>();
             services.AddSingleton<CaDatabaseLoader>();
@@ -37,12 +40,12 @@ namespace OcspResponder.Composition
                 provider => new LoggingCaDescriptionsLoader(
                     provider.GetRequiredService<CaDatabaseLoader>(),
                     provider.GetRequiredService<ILogger<ICaDatabaseLoader>>()));
-            services.AddSingleton<CaDescriptionFilesSource>();
-            services.Configure<CaDescriptionDatabaseOptions>(_configuration);
+            services.AddSingleton<CaDatabasePathsSource>();
+            services.Configure<CaDatabaseOptions>(_configuration);
             services.AddSingleton<OpenSslDbParser>();
             services.AddSingleton<ResponderChainLoader>();
             services.Configure<ResponderChainOptions>(_configuration);
-            services.ConfigureOptions<ConfigureCaDescriptionDatabaseOptions>();
+            services.ConfigureOptions<ConfigureCaDatabaseOptions>();
             services.AddSingleton<Core.OcspResponder>();
             services.AddSingleton(
                 provider => new LoggingOcspResponder(
@@ -56,7 +59,7 @@ namespace OcspResponder.Composition
             services.AddSingleton<IMetricRecorder>(provider => provider.GetRequiredService<MetricCollector>());
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
             services.AddSingleton<IOcspLogger, OcspLogger>();
-            services.AddHostedService<CaDatabaseUpdaterService>();
+            services.AddHostedService<CaDatabaseLoaderService>();
         }
 
 #pragma warning disable CA1822 // Mark members as static -- future-proofing
