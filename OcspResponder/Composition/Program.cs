@@ -84,7 +84,7 @@ namespace OcspResponder.Composition
             }
 #endif
 
-#if MINIMAL_BUILD
+#if !MINIMAL_BUILD
             if (hostingOptions.ForceConsoleLogging || !Journal.IsAvailable)
 #endif
             {
