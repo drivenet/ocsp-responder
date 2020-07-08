@@ -6,15 +6,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace OcspResponder.Core.Services
 {
-    internal sealed class BackgroundUpdaterService : IHostedService, IDisposable
+    internal sealed class CaDatabaseUpdaterService : IHostedService, IDisposable
     {
-        private static readonly TimeSpan Interval = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan Interval = TimeSpan.FromSeconds(17);
 
         private readonly ICaDatabaseLoader _loader;
         private readonly Timer _timer;
         private readonly TaskCompletionSource<bool> _tcs = new TaskCompletionSource<bool>();
 
-        public BackgroundUpdaterService(ICaDatabaseLoader loader)
+        public CaDatabaseUpdaterService(ICaDatabaseLoader loader)
         {
             _loader = loader ?? throw new ArgumentNullException(nameof(loader));
             _timer = new Timer(Process);

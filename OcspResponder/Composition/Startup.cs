@@ -45,7 +45,7 @@ namespace OcspResponder.Composition
             services.AddSingleton<IOcspResponder, Core.OcspResponder>();
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
             services.AddSingleton<IOcspLogger, OcspLogger>();
-            services.AddHostedService<BackgroundUpdaterService>();
+            services.AddHostedService<CaDatabaseUpdaterService>();
         }
 
 #pragma warning disable CA1822 // Mark members as static -- future-proofing
