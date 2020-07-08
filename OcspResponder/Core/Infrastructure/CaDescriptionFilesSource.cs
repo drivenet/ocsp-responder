@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Microsoft.Extensions.Options;
+
 using static System.FormattableString;
 
 namespace OcspResponder.Core.Infrastructure
@@ -11,30 +13,25 @@ namespace OcspResponder.Core.Infrastructure
     {
         private static readonly EnumerationOptions EnumerationOptions = new EnumerationOptions { MatchCasing = MatchCasing.CaseSensitive };
 
-        private readonly DirectoryInfo _directory;
+        private readonly IOptionsMonitor<CaDescriptionDatabaseOptions> _options;
 
-        public CaDescriptionFilesSource(string path)
+        public CaDescriptionFilesSource(IOptionsMonitor<CaDescriptionDatabaseOptions> options)
         {
-            if (!Path.IsPathFullyQualified(path))
-            {
-                throw new ArgumentOutOfRangeException(nameof(path), path, "The database file path is not fully qualified.");
-            }
-
-            _directory = new DirectoryInfo(path);
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public IReadOnlyList<CaDescriptionFilePaths> GetFiles()
         {
-            _directory.Refresh();
-            if (!_directory.Exists)
+            var directory = new DirectoryInfo(_options.CurrentValue.DatabasePath);
+            if (!directory.Exists)
             {
                 return Array.Empty<CaDescriptionFilePaths>();
             }
 
-            var dbFiles = _directory.GetFiles("*.db", EnumerationOptions).Select(fileInfo => fileInfo.FullName).ToList();
+            var dbFiles = directory.GetFiles("*.db", EnumerationOptions).Select(fileInfo => fileInfo.FullName).ToList();
             var missingFileIds = dbFiles.Select(Path.GetFileNameWithoutExtension).ToHashSet();
             missingFileIds.SymmetricExceptWith(
-                _directory.GetFiles("*-ocsp.pfx", EnumerationOptions)
+                directory.GetFiles("*-ocsp.pfx", EnumerationOptions)
                     .Select(fileInfo =>
                     {
                         var name = Path.GetFileNameWithoutExtension(fileInfo.FullName);

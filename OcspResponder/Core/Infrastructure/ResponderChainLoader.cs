@@ -4,17 +4,19 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
+using Microsoft.Extensions.Options;
+
 using static System.FormattableString;
 
 namespace OcspResponder.Core.Infrastructure
 {
     internal sealed class ResponderChainLoader
     {
-        private readonly string _password;
+        private readonly IOptionsMonitor<ResponderChainOptions> _options;
 
-        public ResponderChainLoader(string password)
+        public ResponderChainLoader(IOptionsMonitor<ResponderChainOptions> options)
         {
-            _password = password ?? throw new ArgumentNullException(nameof(password));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public (X509Certificate2 CaCertificate, X509Certificate2 ResponderCertificate) Load(string fileName)
@@ -24,7 +26,7 @@ namespace OcspResponder.Core.Infrastructure
             {
                 certificates.Import(
                     fileName,
-                    _password,
+                    _options.CurrentValue.CertificatePassword,
                     X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.Exportable);
 
                 var count = certificates.Count;

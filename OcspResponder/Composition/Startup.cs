@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -25,9 +23,6 @@ namespace OcspResponder.Composition
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var databasePath = _configuration.GetValue("databasePath", "db");
-            var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", databasePath));
-            var password = _configuration.GetValue<string>("certificatePassword") ?? throw new ArgumentException("Missing certificate password.");
             services.AddControllers();
             services.AddSingleton<CaDescriptionStore>();
             services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDescriptionStore>());
@@ -41,9 +36,12 @@ namespace OcspResponder.Composition
                 provider => new LoggingCaDescriptionsLoader(
                     provider.GetRequiredService<CaDescriptionsLoader>(),
                     provider.GetRequiredService<ILogger<ICaDescriptionsLoader>>()));
-            services.AddSingleton(_ => new CaDescriptionFilesSource(fullPath));
+            services.AddSingleton<CaDescriptionFilesSource>();
+            services.Configure<CaDescriptionDatabaseOptions>(_configuration);
             services.AddSingleton<OpenSslDbParser>();
-            services.AddSingleton(_ => new ResponderChainLoader(password));
+            services.AddSingleton<ResponderChainLoader>();
+            services.Configure<ResponderChainOptions>(_configuration);
+            services.ConfigureOptions<ConfigureCaDescriptionDatabaseOptions>();
             services.AddSingleton<IOcspResponder, Core.OcspResponder>();
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
             services.AddSingleton<IOcspLogger, OcspLogger>();
