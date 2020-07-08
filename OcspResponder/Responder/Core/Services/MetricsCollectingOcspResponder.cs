@@ -18,10 +18,8 @@ namespace OcspResponder.Responder.Core.Services
 
         public async Task<OcspHttpResponse> Respond(OcspHttpRequest httpRequest)
         {
-            _recorder.Record(httpRequest);
-            var response = await _inner.Respond(httpRequest);
-            _recorder.Record(response);
-            return response;
+            _recorder.RecordRequest();
+            return await _inner.Respond(httpRequest);
         }
     }
 }

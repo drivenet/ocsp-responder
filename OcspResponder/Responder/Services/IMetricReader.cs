@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Net;
-
-namespace OcspResponder.Responder.Services
+﻿namespace OcspResponder.Responder.Services
 {
     public interface IMetricReader
     {
-        IEnumerable<KeyValuePair<string, long>> RequestMethodCounters { get; }
+        ulong Requests { get; }
 
-        IEnumerable<KeyValuePair<HttpStatusCode, long>> ResponseStatusCounters { get; }
+        ulong Errors { get; }
     }
 }

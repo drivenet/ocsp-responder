@@ -13,6 +13,7 @@ using OcspResponder.Core;
 using OcspResponder.Responder.Core;
 using OcspResponder.Responder.Core.Infrastructure;
 using OcspResponder.Responder.Core.Services;
+using OcspResponder.Responder.Services;
 
 namespace OcspResponder.Composition
 {
@@ -57,8 +58,13 @@ namespace OcspResponder.Composition
                     provider.GetRequiredService<IMetricRecorder>()));
             services.AddSingleton<MetricCollector>();
             services.AddSingleton<IMetricRecorder>(provider => provider.GetRequiredService<MetricCollector>());
+            services.AddSingleton<IMetricReader>(provider => provider.GetRequiredService<MetricCollector>());
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
-            services.AddSingleton<IOcspLogger, OcspLogger>();
+            services.AddSingleton<OcspLogger>();
+            services.AddSingleton<IOcspLogger>(
+                provider => new MetricsCollectingOcspLogger(
+                    provider.GetRequiredService<OcspLogger>(),
+                    provider.GetRequiredService<IMetricRecorder>()));
             services.AddHostedService<CaDatabaseLoaderService>();
         }
 

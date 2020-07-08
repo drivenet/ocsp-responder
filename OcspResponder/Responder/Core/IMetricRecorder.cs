@@ -1,11 +1,9 @@
-﻿using OcspResponder.Core;
-
-namespace OcspResponder.Responder.Core
+﻿namespace OcspResponder.Responder.Core
 {
     public interface IMetricRecorder
     {
-        void Record(OcspHttpRequest request);
+        void RecordRequest();
 
-        void Record(OcspHttpResponse response);
+        void RecordError();
     }
 }
