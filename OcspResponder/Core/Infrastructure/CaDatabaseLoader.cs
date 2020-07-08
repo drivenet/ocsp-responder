@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace OcspResponder.Core.Infrastructure
 {
-    internal sealed class CaDescriptionsLoader : IDisposable, ICaDescriptionsLoader
+    internal sealed class CaDatabaseLoader : IDisposable, ICaDatabaseLoader
     {
-        private readonly ICaDescriptionUpdater _updater;
+        private readonly ICaDatabaseUpdater _updater;
         private readonly CaDescriptionLoader _loader;
         private readonly CaDescriptionFilesSource _fileSource;
         private IDisposable? _cleanup;
 
-        public CaDescriptionsLoader(ICaDescriptionUpdater updater, CaDescriptionLoader loader, CaDescriptionFilesSource fileSource)
+        public CaDatabaseLoader(ICaDatabaseUpdater updater, CaDescriptionLoader loader, CaDescriptionFilesSource fileSource)
         {
             _updater = updater ?? throw new ArgumentNullException(nameof(updater));
             _loader = loader ?? throw new ArgumentNullException(nameof(loader));
@@ -35,7 +35,7 @@ namespace OcspResponder.Core.Infrastructure
             var count = files.Count;
             if (count == 0)
             {
-                throw new InvalidDataException("No CA descriptions to load were found.");
+                throw new InvalidDataException("No CA descriptions were found.");
             }
 
             var now = DateTimeOffset.UtcNow;

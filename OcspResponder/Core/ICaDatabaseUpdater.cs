@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace OcspResponder.Core
 {
-    public interface ICaDescriptionUpdater
+    public interface ICaDatabaseUpdater
     {
         IDisposable Update(IReadOnlyCollection<DefaultCaDescription> descriptions);
     }

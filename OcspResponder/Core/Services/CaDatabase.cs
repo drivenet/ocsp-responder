@@ -10,7 +10,7 @@ using OcspResponder.Services;
 
 namespace OcspResponder.Core.Services
 {
-    internal sealed class CaDescriptionStore : ICaDescriptionSource, ICaDescriptionUpdater, IDisposable
+    internal sealed class CaDatabase : ICaDescriptionSource, ICaDatabaseUpdater, IDisposable
     {
         private IReadOnlyDictionary<X509Certificate2, DefaultCaDescription> _store = new Dictionary<X509Certificate2, DefaultCaDescription>();
 

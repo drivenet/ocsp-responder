@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace OcspResponder.Core.Infrastructure
 {
-    internal sealed class LoggingCaDescriptionsLoader : ICaDescriptionsLoader
+    internal sealed class LoggingCaDescriptionsLoader : ICaDatabaseLoader
     {
-        private readonly ICaDescriptionsLoader _inner;
-        private readonly ILogger<ICaDescriptionsLoader> _logger;
+        private readonly ICaDatabaseLoader _inner;
+        private readonly ILogger<ICaDatabaseLoader> _logger;
 
-        public LoggingCaDescriptionsLoader(ICaDescriptionsLoader inner, ILogger<ICaDescriptionsLoader> logger)
+        public LoggingCaDescriptionsLoader(ICaDatabaseLoader inner, ILogger<ICaDatabaseLoader> logger)
         {
             _inner = inner ?? throw new ArgumentNullException(nameof(inner));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

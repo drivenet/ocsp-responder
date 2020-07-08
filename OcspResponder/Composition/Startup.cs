@@ -24,18 +24,18 @@ namespace OcspResponder.Composition
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<CaDescriptionStore>();
-            services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDescriptionStore>());
-            services.AddSingleton<ICaDescriptionUpdater>(
-                provider => new LoggingCaDescriptionUpdater(
-                    provider.GetRequiredService<CaDescriptionStore>(),
-                    provider.GetRequiredService<ILogger<ICaDescriptionUpdater>>()));
+            services.AddSingleton<CaDatabase>();
+            services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDatabase>());
+            services.AddSingleton<ICaDatabaseUpdater>(
+                provider => new LoggingCaDatabaseUpdater(
+                    provider.GetRequiredService<CaDatabase>(),
+                    provider.GetRequiredService<ILogger<ICaDatabaseUpdater>>()));
             services.AddSingleton<CaDescriptionLoader>();
-            services.AddSingleton<CaDescriptionsLoader>();
-            services.AddSingleton<ICaDescriptionsLoader>(
+            services.AddSingleton<CaDatabaseLoader>();
+            services.AddSingleton<ICaDatabaseLoader>(
                 provider => new LoggingCaDescriptionsLoader(
-                    provider.GetRequiredService<CaDescriptionsLoader>(),
-                    provider.GetRequiredService<ILogger<ICaDescriptionsLoader>>()));
+                    provider.GetRequiredService<CaDatabaseLoader>(),
+                    provider.GetRequiredService<ILogger<ICaDatabaseLoader>>()));
             services.AddSingleton<CaDescriptionFilesSource>();
             services.Configure<CaDescriptionDatabaseOptions>(_configuration);
             services.AddSingleton<OpenSslDbParser>();

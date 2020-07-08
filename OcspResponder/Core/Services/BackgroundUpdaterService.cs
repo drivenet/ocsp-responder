@@ -10,11 +10,11 @@ namespace OcspResponder.Core.Services
     {
         private static readonly TimeSpan Interval = TimeSpan.FromSeconds(10);
 
-        private readonly ICaDescriptionsLoader _loader;
+        private readonly ICaDatabaseLoader _loader;
         private readonly Timer _timer;
         private readonly TaskCompletionSource<bool> _tcs = new TaskCompletionSource<bool>();
 
-        public BackgroundUpdaterService(ICaDescriptionsLoader loader)
+        public BackgroundUpdaterService(ICaDatabaseLoader loader)
         {
             _loader = loader ?? throw new ArgumentNullException(nameof(loader));
             _timer = new Timer(Process);

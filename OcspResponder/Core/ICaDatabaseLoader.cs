@@ -1,6 +1,6 @@
 ﻿namespace OcspResponder.Core
 {
-    public interface ICaDescriptionsLoader
+    public interface ICaDatabaseLoader
     {
         void Load();
     }
