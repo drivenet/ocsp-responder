@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -42,7 +43,17 @@ namespace OcspResponder.Composition
             services.AddSingleton<ResponderChainLoader>();
             services.Configure<ResponderChainOptions>(_configuration);
             services.ConfigureOptions<ConfigureCaDescriptionDatabaseOptions>();
-            services.AddSingleton<IOcspResponder, Core.OcspResponder>();
+            services.AddSingleton<Core.OcspResponder>();
+            services.AddSingleton(
+                provider => new LoggingOcspResponder(
+                    provider.GetRequiredService<Core.OcspResponder>(),
+                    provider.GetRequiredService<ILogger<IOcspResponder>>()));
+            services.AddSingleton<IOcspResponder>(
+                provider => new MetricsCollectingOcspResponder(
+                    provider.GetRequiredService<LoggingOcspResponder>(),
+                    provider.GetRequiredService<IMetricRecorder>()));
+            services.AddSingleton<MetricCollector>();
+            services.AddSingleton<IMetricRecorder>(provider => provider.GetRequiredService<MetricCollector>());
             services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
             services.AddSingleton<IOcspLogger, OcspLogger>();
             services.AddHostedService<CaDatabaseUpdaterService>();

@@ -84,11 +84,15 @@ namespace OcspResponder.Composition
             }
 #endif
 
-#if !MINIMAL_BUILD
+#if MINIMAL_BUILD
             if (hostingOptions.ForceConsoleLogging || !Journal.IsAvailable)
 #endif
             {
-                loggingBuilder.AddConsole(options => options.DisableColors = true);
+                loggingBuilder.AddConsole(options =>
+                {
+                    options.IncludeScopes = true;
+                    options.DisableColors = true;
+                });
             }
         }
 
