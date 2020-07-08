@@ -18,4 +18,4 @@ RUN dotnet publish -c Release -r linux-x64 --self-contained false --no-restore -
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ./ocsp-responder --urls http://+:80 --databasePath /db
+ENTRYPOINT ./ocsp-responder --databasePath /db
