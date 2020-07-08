@@ -41,7 +41,11 @@ namespace OcspResponder.Core.Services
             return Task.FromResult(description.ResponderPrivateKey);
         }
 
-        public Task<CaCompromisedStatus> IsCaCompromised(X509Certificate2 caCertificate) => Task.FromResult(new CaCompromisedStatus());
+        public Task<CaCompromisedStatus> IsCaCompromised(X509Certificate2 caCertificate)
+        {
+            _caDescriptions.Get(caCertificate);
+            return Task.FromResult(new CaCompromisedStatus());
+        }
 
         public Task<bool> SerialExists(string serial, X509Certificate2 issuerCertificate)
         {
