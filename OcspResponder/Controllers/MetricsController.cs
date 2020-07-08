@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Globalization;
+using System.Net;
 using System.Net.Mime;
 using System.Text;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 using OcspResponder.Responder.Services;
 
@@ -27,12 +30,21 @@ namespace OcspResponder.Controllers
         public ActionResult GetTotalErrors()
             => Content(_metricReader.Errors);
 
-        private ActionResult Content(ulong counter)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
-            return Content(
+            var connection = context.HttpContext.Connection;
+            if (!connection.RemoteIpAddress.Equals(connection.LocalIpAddress))
+            {
+                context.Result = StatusCode(StatusCodes.Status403Forbidden);
+                return;
+            }
+
+            base.OnActionExecuting(context);
+        }
+
+        private ActionResult Content(ulong counter) => Content(
                 counter.ToString(NumberFormatInfo.InvariantInfo),
                 MediaTypeNames.Text.Plain,
                 Encoding.ASCII);
-        }
     }
 }
