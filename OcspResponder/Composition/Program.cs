@@ -17,44 +17,30 @@ namespace OcspResponder.Composition
     {
         public static async Task Main(string[] args)
         {
-            var hostingOptions = GetHostingOptions(args);
-            var appConfiguration = LoadAppConfiguration(hostingOptions.Config, args);
-            using var host = BuildHost(hostingOptions, appConfiguration);
+            using var host = BuildHost(args);
             await host.RunAsync();
         }
 
-        private static IConfiguration LoadAppConfiguration(string configPath, string[] args)
-            => new ConfigurationBuilder()
-                .AddJsonFile(configPath, optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables("OCSPR_")
-                .AddCommandLine(args)
-                .Build();
-
-        private static HostingOptions GetHostingOptions(string[] args)
-            => new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .Build()
-                .Get<HostingOptions>() ?? new HostingOptions();
-
-        private static IHost BuildHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
+        private static IHost BuildHost(string[] args)
             => new HostBuilder()
+                .ConfigureHostConfiguration(configBuilder => configBuilder.AddCommandLine(args))
                 .ConfigureWebHost(webHost => webHost
-                    .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
+                    .UseKestrel((builderContext, options) => ConfigureKestrel(builderContext, options))
 #if !MINIMAL_BUILD
                     .UseLibuv()
 #endif
                     .UseStartup<Startup>())
-                .ConfigureLogging(loggingBuilder => ConfigureLogging(loggingBuilder, hostingOptions))
+                .ConfigureLogging((builderContext, loggingBuilder) => ConfigureLogging(builderContext, loggingBuilder))
 #if !MINIMAL_BUILD
                 .UseSystemd()
 #endif
-                .ConfigureAppConfiguration(configBuilder => configBuilder.AddConfiguration(appConfiguration))
+                .ConfigureAppConfiguration((builderContext, configBuilder) => ConfigureAppConfiguration(args, builderContext, configBuilder))
                 .Build();
 
-#pragma warning disable CA1801 // Review unused parameters -- conditional compilation
-        private static void ConfigureLogging(ILoggingBuilder loggingBuilder, HostingOptions hostingOptions)
-#pragma warning restore CA1801 // Review unused parameters
+        private static void ConfigureLogging(HostBuilderContext builderContext, ILoggingBuilder loggingBuilder)
         {
+            var loggingSection = builderContext.Configuration.GetSection("Logging");
+            loggingBuilder.AddConfiguration(loggingSection);
             loggingBuilder.AddFilter(
                 (category, level) => level >= LogLevel.Warning
                     || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
@@ -70,7 +56,7 @@ namespace OcspResponder.Composition
 #endif
 
 #if !MINIMAL_BUILD
-            if (hostingOptions.ForceConsoleLogging || !Journal.IsAvailable)
+            if (loggingSection.GetValue<bool>("ForceConsole") || !Journal.IsAvailable)
 #endif
             {
                 loggingBuilder.AddConsole(options =>
@@ -81,19 +67,32 @@ namespace OcspResponder.Composition
             }
         }
 
-        private static void ConfigureKestrel(KestrelServerOptions options, HostingOptions hostingOptions)
+        private static void ConfigureKestrel(WebHostBuilderContext builderContext, KestrelServerOptions options)
         {
             options.AddServerHeader = false;
+            options.Limits.MaxRequestLineSize = 2048;
             options.Limits.MaxRequestBodySize = 65536;
             options.Limits.MaxRequestHeadersTotalSize = 4096;
 
-            var maxConcurrentConnections = hostingOptions.MaxConcurrentConnections;
-            if (maxConcurrentConnections != 0)
+            var kestrelSection = builderContext.Configuration.GetSection("Kestrel");
+            options.Configure(kestrelSection);
+
+            if (kestrelSection.Get<KestrelServerOptions>() is { } kestrelOptions)
             {
-                options.Limits.MaxConcurrentConnections = maxConcurrentConnections;
+                options.Limits.MaxConcurrentConnections = kestrelOptions.Limits.MaxConcurrentConnections;
+            }
+            else
+            {
+                options.Limits.MaxConcurrentConnections = 100;
             }
 
             options.UseSystemd();
         }
+
+        private static IConfigurationBuilder ConfigureAppConfiguration(string[] args, HostBuilderContext builderContext, IConfigurationBuilder configBuilder)
+            => configBuilder
+                .AddJsonFile(builderContext.Configuration.GetValue("ConfigPath", "appsettings.json"), optional: true, reloadOnChange: true)
+                .AddCommandLine(args)
+                .AddEnvironmentVariables("OCSPR_");
     }
 }
