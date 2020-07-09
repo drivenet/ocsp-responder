@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 using OcspResponder.CaDatabase.Services;
 
@@ -10,21 +11,31 @@ namespace OcspResponder.Responder.Core.Services
 {
     internal sealed class CaDatabaseLoaderService : IHostedService, IDisposable
     {
-        private static readonly TimeSpan Interval = TimeSpan.FromSeconds(17);
-
         private readonly ICaDatabaseLoader _loader;
+        private readonly IOptionsMonitor<CaDatabaseLoaderOptions> _options;
         private readonly Timer _timer;
         private readonly TaskCompletionSource<bool> _tcs = new TaskCompletionSource<bool>();
+        private TimeSpan _currentInterval;
 
-        public CaDatabaseLoaderService(ICaDatabaseLoader loader)
+        public CaDatabaseLoaderService(ICaDatabaseLoader loader, IOptionsMonitor<CaDatabaseLoaderOptions> options)
         {
             _loader = loader ?? throw new ArgumentNullException(nameof(loader));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _timer = new Timer(Process);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer.Change(TimeSpan.Zero, Interval);
+            _currentInterval = GetInterval(_options.CurrentValue);
+            _timer.Change(TimeSpan.Zero, _currentInterval);
+            _options.OnChange(options =>
+            {
+                var interval = GetInterval(options);
+                if (_currentInterval != interval)
+                {
+                    _timer.Change(interval, interval);
+                }
+            });
             return Task.WhenAny(_tcs.Task, Task.Delay(Timeout.Infinite, cancellationToken));
         }
 
@@ -38,6 +49,9 @@ namespace OcspResponder.Responder.Core.Services
         {
             Dispose(CancellationToken.None);
         }
+
+        private static TimeSpan GetInterval(CaDatabaseLoaderOptions options)
+            => options.LoadInterval != TimeSpan.Zero ? options.LoadInterval : Timeout.InfiniteTimeSpan;
 
         private void Dispose(CancellationToken cancellationToken)
         {

@@ -37,6 +37,7 @@ namespace OcspResponder.Composition
                     provider.GetRequiredService<ILogger<ICaDatabaseUpdater>>()));
             services.AddSingleton<CaDescriptionLoader>();
             services.AddSingleton<CaDatabaseLoader>();
+            services.Configure<CaDatabaseLoaderOptions>(_configuration);
             services.AddSingleton<ICaDatabaseLoader>(
                 provider => new LoggingCaDescriptionsLoader(
                     provider.GetRequiredService<CaDatabaseLoader>(),
