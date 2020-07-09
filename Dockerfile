@@ -1,7 +1,3 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
-WORKDIR /app
-EXPOSE 80
-
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 COPY shared shared
@@ -15,7 +11,10 @@ COPY OcspResponder .
 RUN dotnet publish -c Release -r linux-x64 --self-contained false --no-restore -p:MinimalBuild=true -o /app && \
     rm /app/web.config /app/*.deps.json
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ./ocsp-responder --databasePath /db
+COPY /db db
+
+EXPOSE 80
+ENTRYPOINT ./ocsp-responder

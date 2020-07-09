@@ -10,7 +10,6 @@
 
 **/launchSettings.json
 
-db/
 packages/
 
 OcspResponder/*settings.json

@@ -11,5 +11,8 @@ The web host is configured from command line only (see HostingOptions and generi
 It has full support for running via `systemd`, including `Type=notify` unit, socket inheritance via Libuv, journald logging, etc.
 
 ## Docker
-`docker-build`
-`docker run --rm -it -p 8080:80 -v path-to-local-db:/db -e OCSPR_CERTIFICATEPASSWORD=password ocsp-responder`
+### Static database
+Place database in `db` directory, build with `docker-build`, run with `docker run --rm -it -p 8080:80 -e OCSPR_LOADINTERVAL=0 -e OCSPR_CERTIFICATEPASSWORD=password ocsp-responder`.
+
+### Dynamic host-mounted database
+Ensure that `db` directory does not contain anything except `.placeholder`, build with `docker-build`, run with `docker run --rm -it -p 8080:80 -v path-to-local-db:/db -e OCSPR_CERTIFICATEPASSWORD=password ocsp-responder`.
