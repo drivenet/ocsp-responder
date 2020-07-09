@@ -38,18 +38,12 @@ namespace OcspResponder.Composition
 
         private static IHost BuildHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
             => new HostBuilder()
-                .ConfigureWebHost(webHost =>
-                {
-                    webHost
-                        .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
-                        .UseStartup<Startup>();
+                .ConfigureWebHost(webHost => webHost
+                    .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
 #if !MINIMAL_BUILD
-                    if (!hostingOptions.NoLibUv)
-                    {
-                        webHost.UseLibuv();
-                    }
+                    .UseLibuv()
 #endif
-                })
+                    .UseStartup<Startup>())
                 .ConfigureLogging(loggingBuilder => ConfigureLogging(loggingBuilder, hostingOptions))
 #if !MINIMAL_BUILD
                 .UseSystemd()
