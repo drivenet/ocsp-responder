@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 #if !MINIMAL_BUILD
 using Tmds.Systemd;
@@ -24,12 +25,7 @@ namespace OcspResponder.Composition
         private static IHost BuildHost(string[] args)
             => new HostBuilder()
                 .ConfigureHostConfiguration(configBuilder => configBuilder.AddCommandLine(args))
-                .ConfigureWebHost(webHost => webHost
-                    .UseKestrel((builderContext, options) => ConfigureKestrel(builderContext, options))
-#if !MINIMAL_BUILD
-                    .UseLibuv()
-#endif
-                    .UseStartup<Startup>())
+                .ConfigureWebHost(webHost => ConfigureWebHost(webHost))
                 .ConfigureLogging((builderContext, loggingBuilder) => ConfigureLogging(builderContext, loggingBuilder))
 #if !MINIMAL_BUILD
                 .UseSystemd()
@@ -37,32 +33,47 @@ namespace OcspResponder.Composition
                 .ConfigureAppConfiguration((builderContext, configBuilder) => ConfigureAppConfiguration(args, builderContext, configBuilder))
                 .Build();
 
+        private static IWebHostBuilder ConfigureWebHost(IWebHostBuilder webHost)
+            => webHost
+                .UseKestrel((builderContext, options) => ConfigureKestrel(builderContext, options))
+#if !MINIMAL_BUILD
+                .UseLibuv()
+#endif
+                .UseStartup<Startup>();
+
+#pragma warning disable CA1801 // Review unused parameters -- requred for other build configuration
         private static void ConfigureLogging(HostBuilderContext builderContext, ILoggingBuilder loggingBuilder)
+#pragma warning restore CA1801 // Review unused parameters
         {
-            var loggingSection = builderContext.Configuration.GetSection("Logging");
-            loggingBuilder.AddConfiguration(loggingSection);
             loggingBuilder.AddFilter(
                 (category, level) => level >= LogLevel.Warning
                     || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
+
 #if !MINIMAL_BUILD
             if (Journal.IsSupported)
             {
                 loggingBuilder.AddJournal(options =>
                 {
-                    options.SyslogIdentifier = "ocsp-responder";
+                    options.SyslogIdentifier = builderContext.HostingEnvironment.ApplicationName;
                     options.DropWhenBusy = true;
                 });
             }
 #endif
 
 #if !MINIMAL_BUILD
-            if (loggingSection.GetValue<bool>("ForceConsole") || !Journal.IsAvailable)
+            if (builderContext.Configuration.GetValue<bool>("ForceConsoleLogging")
+                 || !Journal.IsAvailable)
 #endif
             {
                 loggingBuilder.AddConsole(options =>
                 {
                     options.IncludeScopes = true;
-                    options.DisableColors = true;
+                    options.Format = ConsoleLoggerFormat.Systemd;
+                    options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffffffzzz \""
+                        + Environment.MachineName
+                        + "\" \""
+                        + builderContext.HostingEnvironment.ApplicationName
+                        + ":\" ";
                 });
             }
         }

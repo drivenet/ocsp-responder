@@ -17,4 +17,4 @@ COPY --from=build /app .
 COPY /db db
 
 EXPOSE 80
-ENTRYPOINT ./ocsp-responder --logging:console:format systemd
+ENTRYPOINT ./ocsp-responder
