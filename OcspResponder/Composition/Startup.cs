@@ -60,7 +60,11 @@ namespace OcspResponder.Composition
             services.AddSingleton<MetricCollector>();
             services.AddSingleton<IMetricRecorder>(provider => provider.GetRequiredService<MetricCollector>());
             services.AddSingleton<IMetricReader>(provider => provider.GetRequiredService<MetricCollector>());
-            services.AddSingleton<IOcspResponderRepository, OcspResponderRepository>();
+            services.AddSingleton<OcspResponderRepository>();
+            services.AddSingleton<IOcspResponderRepository>(
+                provider => new LoggingOcspResponderRepository(
+                    provider.GetRequiredService<OcspResponderRepository>(),
+                    provider.GetRequiredService<ILogger<IOcspResponderRepository>>()));
             services.AddSingleton<OcspLogger>();
             services.AddSingleton<IOcspLogger>(
                 provider => new MetricsCollectingOcspLogger(
