@@ -105,7 +105,7 @@ namespace OcspResponder.CaDatabase.Core.Services
                 throw new ArgumentException("Invalid certificate serial string.", nameof(line), exception);
             }
 
-            var serial = new BigInteger(serialBytes, isBigEndian: true);
+            var serial = new BigInteger(serialBytes, isUnsigned: true, isBigEndian: true);
             return new CertificateRecord(serial, revokedOn);
         }
 
