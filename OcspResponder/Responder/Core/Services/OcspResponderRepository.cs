@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 using OcspResponder.CaDatabase.Services;
+using OcspResponder.Common;
 using OcspResponder.Core;
 
 namespace OcspResponder.Responder.Core.Services
@@ -50,13 +51,13 @@ namespace OcspResponder.Responder.Core.Services
 
         public Task<bool> SerialExists(string serial, X509Certificate2 issuerCertificate)
         {
-            var exists = _caDescriptions.Fetch(issuerCertificate)?.Fetch(GetSerialNumber(serial)) is object;
+            var exists = _caDescriptions.Fetch(issuerCertificate)?.Fetch(CertificateUtils.GetSerialNumber(serial)) is object;
             return Task.FromResult(exists);
         }
 
         public Task<CertificateRevocationStatus> SerialIsRevoked(string serial, X509Certificate2 issuerCertificate)
         {
-            var revokedOn = _caDescriptions.Fetch(issuerCertificate)?.Fetch(GetSerialNumber(serial))?.RevokedOn;
+            var revokedOn = _caDescriptions.Fetch(issuerCertificate)?.Fetch(CertificateUtils.GetSerialNumber(serial))?.RevokedOn;
             var status = revokedOn is { } date
                 ? new CertificateRevocationStatus
                 {
@@ -67,8 +68,5 @@ namespace OcspResponder.Responder.Core.Services
 
             return Task.FromResult(status);
         }
-
-        private static BigInteger GetSerialNumber(string serial)
-            => BigInteger.Parse(serial, NumberStyles.None, NumberFormatInfo.InvariantInfo);
     }
 }
