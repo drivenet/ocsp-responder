@@ -2,38 +2,74 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 
 using OcspResponder.CaDatabase.Entities;
 using OcspResponder.CaDatabase.Services;
-using OcspResponder.Common;
 
 namespace OcspResponder.CaDatabase.Core.Infrastructure
 {
     internal sealed class CaDatabaseStore : ICaDescriptionSource, ICaDatabaseUpdater, IDisposable
     {
-        private IReadOnlyDictionary<X509Certificate2, DefaultCaDescription> _store = new Dictionary<X509Certificate2, DefaultCaDescription>();
+        private readonly object _lock = new object();
+        private Dictionary<X509Certificate2, DefaultCaDescription> _store = new Dictionary<X509Certificate2, DefaultCaDescription>();
+        private Dictionary<X509Certificate2, DefaultCaDescription> _prevStore = new Dictionary<X509Certificate2, DefaultCaDescription>();
 
         public IEnumerable<X509Certificate2> CaCertificates => _store.Select(pair => pair.Value.CaCertificate);
 
-        public IDisposable Update(IReadOnlyCollection<DefaultCaDescription> descriptions)
+        public void Update(IReadOnlyCollection<DefaultCaDescription> descriptions)
         {
             var store = descriptions.ToDictionary(description => description.CaCertificate);
-            var oldDescriptions = Interlocked.Exchange(ref _store, store).Values;
-            return new DisposableEnumerable(oldDescriptions);
+            lock (_lock)
+            {
+                _prevStore = _store;
+                _store = store;
+                foreach (var certificate in _store.Keys)
+                {
+                    if (_prevStore.Remove(certificate, out var description))
+                    {
+                        description.Dispose();
+                    }
+                }
+            }
         }
 
         public CaDescription? Fetch(X509Certificate2 certificate)
         {
-            _store.TryGetValue(certificate, out var description);
+            if (!_store.TryGetValue(certificate, out var description))
+            {
+                _prevStore.TryGetValue(certificate, out description);
+            }
+
             return description;
         }
 
         public void Dispose()
         {
-            foreach (var pair in _store.Values)
+            lock (_lock)
             {
-                pair.Dispose();
+                try
+                {
+                    foreach (var pair in _store.Values)
+                    {
+                        pair.Dispose();
+                    }
+                }
+                finally
+                {
+                    _store.Clear();
+                }
+
+                try
+                {
+                    foreach (var pair in _prevStore.Values)
+                    {
+                        pair.Dispose();
+                    }
+                }
+                finally
+                {
+                    _prevStore.Clear();
+                }
             }
         }
     }

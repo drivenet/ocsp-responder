@@ -16,10 +16,10 @@ namespace OcspResponder.CaDatabase.Core.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IDisposable Update(IReadOnlyCollection<DefaultCaDescription> descriptions)
+        public void Update(IReadOnlyCollection<DefaultCaDescription> descriptions)
         {
             _logger.LogInformation(EventIds.UpdatingDatabase, "Updating CA database, descriptions: {Count}", descriptions.Count);
-            return _inner.Update(descriptions);
+            _inner.Update(descriptions);
         }
 
         private static class EventIds
