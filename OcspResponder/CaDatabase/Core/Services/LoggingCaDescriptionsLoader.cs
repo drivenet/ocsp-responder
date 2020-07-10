@@ -25,7 +25,7 @@ namespace OcspResponder.CaDatabase.Core.Services
             }
             catch (Exception exception)
             {
-                _logger.LogError(EventIds.LoadFailed, exception, "Failed to load CA description.");
+                _logger.LogError(EventIds.LoadFailed, exception, "Failed to load CA description");
                 throw;
             }
         }
