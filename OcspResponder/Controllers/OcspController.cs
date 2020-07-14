@@ -20,7 +20,7 @@ namespace OcspResponder.Controllers
 
         [HttpGet]
 #pragma warning disable CA1801 // Review unused parameters -- required to match encoded route
-        public async Task<IActionResult> Get(string encoded)
+        public async Task<OcspActionResult> Get(string encoded)
 #pragma warning restore CA1801 // Review unused parameters
         {
             var ocspHttpRequest = await Request.ToOcspHttpRequest();
@@ -29,7 +29,7 @@ namespace OcspResponder.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<OcspActionResult> Post()
         {
             var ocspHttpRequest = await Request.ToOcspHttpRequest();
             var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest);

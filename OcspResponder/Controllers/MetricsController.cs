@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Net;
 using System.Net.Mime;
 using System.Text;
 
@@ -23,11 +22,11 @@ namespace OcspResponder.Controllers
         }
 
         [Route("requests/total")]
-        public ActionResult GetTotalRequests()
+        public ContentResult GetTotalRequests()
             => Content(_metricReader.Requests);
 
         [Route("errors/total")]
-        public ActionResult GetTotalErrors()
+        public ContentResult GetTotalErrors()
             => Content(_metricReader.Errors);
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -42,7 +41,8 @@ namespace OcspResponder.Controllers
             base.OnActionExecuting(context);
         }
 
-        private ActionResult Content(ulong counter) => Content(
+        private ContentResult Content(ulong counter)
+            => Content(
                 counter.ToString(NumberFormatInfo.InvariantInfo),
                 MediaTypeNames.Text.Plain,
                 Encoding.ASCII);
