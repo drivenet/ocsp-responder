@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using Microsoft.Extensions.Options;
-
-using static System.FormattableString;
 
 namespace OcspResponder.CaDatabase.Core.Services
 {
@@ -28,28 +25,20 @@ namespace OcspResponder.CaDatabase.Core.Services
                 return Array.Empty<CaDescriptionPaths>();
             }
 
-            var dbFiles = directory.GetFiles("*.db", EnumerationOptions).Select(fileInfo => fileInfo.FullName).ToList();
-            var missingFileIds = dbFiles.Select(Path.GetFileNameWithoutExtension).ToHashSet();
-            missingFileIds.SymmetricExceptWith(
-                directory.GetFiles("*-ocsp.pfx", EnumerationOptions)
-                    .Select(fileInfo =>
-                    {
-                        var name = Path.GetFileNameWithoutExtension(fileInfo.FullName);
-                        name = name.Substring(0, name.Length - 5);
-                        return name;
-                    }));
-
-            if (missingFileIds.Count != 0)
+            var paths = new List<CaDescriptionPaths>();
+            foreach (var fileInfo in directory.GetFiles("*.db", EnumerationOptions))
             {
-                var ids = string.Join("\", \"", missingFileIds.Take(5));
-                throw new InvalidDataException(Invariant($"Some CA description files are missing.\nNon-exhaustive id list: \"{ids}\""));
+                var dbFilePath = fileInfo.FullName;
+                var certFilePath = Path.Combine(Path.GetDirectoryName(dbFilePath) ?? "", Path.GetFileNameWithoutExtension(dbFilePath) + "-ocsp.pfx");
+                if (!File.Exists(certFilePath))
+                {
+                    continue;
+                }
+
+                paths.Add(new CaDescriptionPaths(dbFilePath, certFilePath));
             }
 
-            return dbFiles
-                .Select(fileName => new CaDescriptionPaths(
-                    fileName,
-                    Path.Combine(Path.GetDirectoryName(fileName) ?? "", Path.GetFileNameWithoutExtension(fileName) + "-ocsp.pfx")))
-                .ToList();
+            return paths;
         }
     }
 }
