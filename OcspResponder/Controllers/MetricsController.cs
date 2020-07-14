@@ -21,12 +21,12 @@ namespace OcspResponder.Controllers
             _metricReader = metricReader ?? throw new ArgumentNullException(nameof(metricReader));
         }
 
-        [Route("requests/total")]
-        public ContentResult GetTotalRequests()
+        [Route("requests")]
+        public ContentResult GetRequests()
             => Content(_metricReader.Requests);
 
-        [Route("errors/total")]
-        public ContentResult GetTotalErrors()
+        [Route("errors")]
+        public ContentResult GetErrors()
             => Content(_metricReader.Errors);
 
         public override void OnActionExecuting(ActionExecutingContext context)
