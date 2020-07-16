@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -97,7 +98,34 @@ namespace OcspResponder.Composition
                 options.Limits.MaxConcurrentConnections = 100;
             }
 
-            options.UseSystemd();
+#if !MINIMAL_BUILD
+            // SD_LISTEN_FDS_START https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
+            const ulong SdListenFdsStart = 3;
+
+            byte extraListenFds = 0;
+            options.UseSystemd(listenOptions =>
+            {
+                if (listenOptions.FileHandle == SdListenFdsStart)
+                {
+                    // LISTEN_FDS https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
+                    const string ListenFds = "LISTEN_FDS";
+                    if (Environment.GetEnvironmentVariable(ListenFds) is { } listenFdsString)
+                    {
+                        if (byte.TryParse(listenFdsString, NumberStyles.None, NumberFormatInfo.InvariantInfo, out extraListenFds))
+                        {
+                            --extraListenFds;
+                        }
+                    }
+                }
+            });
+
+            for (ulong handle = SdListenFdsStart + 1, lastHandle = SdListenFdsStart + extraListenFds;
+                handle <= lastHandle;
+                ++handle)
+            {
+                options.ListenHandle(handle);
+            }
+#endif
         }
 
         private static IConfigurationBuilder ConfigureAppConfiguration(string[] args, HostBuilderContext builderContext, IConfigurationBuilder configBuilder)

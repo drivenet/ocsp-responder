@@ -4,7 +4,7 @@
   <PropertyGroup>
     <TargetFramework>$(NewApplicationTargetFramework)</TargetFramework>
     <AssemblyName>ocsp-responder</AssemblyName>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn);CA2007</NoWarn>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
