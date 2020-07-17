@@ -64,7 +64,7 @@ namespace OcspResponder.CaDatabase.Core.Services
             {
                 if (!certFileMap.Remove(name, out var certFilePath))
                 {
-                    _logger.LogWarning(EventIds.MissingCertificate, "Missing certificate for database \"{Name}\"", name);
+                    _logger.LogError(EventIds.MissingCertificate, "Missing certificate for database \"{Name}\"", name);
                     continue;
                 }
 
@@ -73,7 +73,7 @@ namespace OcspResponder.CaDatabase.Core.Services
 
             foreach (var name in certFileMap.Keys)
             {
-                _logger.LogWarning(EventIds.MissingDatabase, "Missing database for certificate \"{Name}\"", name);
+                _logger.LogError(EventIds.MissingDatabase, "Missing database for certificate \"{Name}\"", name);
             }
 
             return paths;

@@ -40,7 +40,7 @@ namespace OcspResponder.Responder.Core.Services
             if (!exists)
             {
                 var serialHex = CertificateUtils.ToSerialNumberHexString(CertificateUtils.GetSerialNumber(serial));
-                _logger.LogWarning(
+                _logger.LogError(
                     EventIds.MissingCertificate,
                     "Missing certificate with serial {Serial} issued by issuer with thumbprint {IssuerThumbprint}({IssuerSubject})",
                     serialHex,
