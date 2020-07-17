@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Numerics;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.Options;
 
 using OcspResponder.CaDatabase.Services;
 using OcspResponder.Common;
@@ -14,13 +14,13 @@ namespace OcspResponder.Responder.Core.Services
 {
     internal sealed class OcspResponderRepository : IOcspResponderRepository
     {
-        private static readonly TimeSpan ResponseLifetime = TimeSpan.FromDays(7);
-
         private readonly ICaDescriptionSource _caDescriptions;
+        private readonly IOptionsMonitor<OcspResponderOptions> _options;
 
-        public OcspResponderRepository(ICaDescriptionSource caDescriptions)
+        public OcspResponderRepository(ICaDescriptionSource caDescriptions, IOptionsMonitor<OcspResponderOptions> options)
         {
             _caDescriptions = caDescriptions ?? throw new ArgumentNullException(nameof(caDescriptions));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public void Dispose()
@@ -35,7 +35,7 @@ namespace OcspResponder.Responder.Core.Services
 
         public Task<IEnumerable<X509Certificate2>> GetIssuerCertificates() => Task.FromResult(_caDescriptions.CaCertificates);
 
-        public Task<DateTimeOffset> GetNextUpdate() => Task.FromResult(DateTimeOffset.UtcNow + ResponseLifetime);
+        public Task<DateTimeOffset> GetNextUpdate() => Task.FromResult(DateTimeOffset.UtcNow + _options.CurrentValue.NextUpdateInterval);
 
         public Task<AsymmetricAlgorithm> GetResponderPrivateKey(X509Certificate2 caCertificate)
         {
