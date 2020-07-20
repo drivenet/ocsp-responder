@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -49,13 +50,14 @@ namespace OcspResponder.Composition
             services.Configure<ResponderChainOptions>(_configuration);
             services.ConfigureOptions<ConfigureCaDatabaseOptions>();
             services.AddSingleton<Core.OcspResponder>();
-            services.AddSingleton(
-                provider => new LoggingOcspResponder(
-                    provider.GetRequiredService<Core.OcspResponder>(),
+            services.AddSingleton<OcspResponderEx>();
+            services.AddSingleton<IOcspResponderEx>(
+                provider => new LoggingOcspResponderEx(
+                    provider.GetRequiredService<OcspResponderEx>(),
                     provider.GetRequiredService<ILogger<IOcspResponder>>()));
             services.AddSingleton<IOcspResponder>(
                 provider => new MetricsCollectingOcspResponder(
-                    provider.GetRequiredService<LoggingOcspResponder>(),
+                    provider.GetRequiredService<Core.OcspResponder>(),
                     provider.GetRequiredService<IMetricRecorder>()));
             services.AddSingleton<MetricCollector>();
             services.AddSingleton<IMetricRecorder>(provider => provider.GetRequiredService<MetricCollector>());
