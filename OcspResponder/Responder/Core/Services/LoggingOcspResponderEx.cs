@@ -21,7 +21,7 @@ namespace OcspResponder.Responder.Core.Services
 
         public async Task<OcspHttpResponse> Respond(OcspHttpRequest httpRequest, RequestMetadata metadata)
         {
-            _logger.LogInformation(EventIds.Request, "OCSP request {Method} {Uri} from {RemoteIP}, length: {Length}", httpRequest.HttpMethod, metadata.RemoteIP, httpRequest.RequestUri, httpRequest.Content?.Length);
+            _logger.LogInformation(EventIds.Request, "OCSP request {Method} {Uri} from {RemoteIP}, length: {Length}", httpRequest.HttpMethod, httpRequest.RequestUri, metadata.RemoteIP, httpRequest.Content?.Length);
             var response = await _inner.Respond(httpRequest, metadata);
             _logger.LogInformation(EventIds.Response, "OCSP response {Status}, length: {Length}", response.Status, response.Content.Length);
             return response;
