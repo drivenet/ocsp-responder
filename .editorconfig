@@ -11,6 +11,10 @@ resharper_markup_attribute_typo_highlighting = do_not_show
 resharper_markup_text_typo_highlighting = do_not_show
 resharper_string_literal_typo_highlighting = do_not_show
 
+[*.{tt,t4}]
+charset = utf-8-bom
+trim_trailing_whitespace = true
+insert_final_newline = false
 
 [*.{cs,cshtml,as?x}]
 charset = utf-8-bom
