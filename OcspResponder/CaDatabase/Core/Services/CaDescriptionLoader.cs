@@ -27,9 +27,7 @@ namespace OcspResponder.CaDatabase.Core.Services
             var (caCertificate, responderCertificate) = _chainLoader.Load(paths.CertFilePath);
             try
             {
-#pragma warning disable CA2000 // Dispose objects before losing scope -- passed to CaDescription
                 var responderPrivateKey = responderCertificate.GetRSACngPrivateKey();
-#pragma warning restore CA2000 // Dispose objects before losing scope
 
                 return new DefaultCaDescription(caCertificate, responderCertificate, responderPrivateKey, records);
             }
