@@ -42,7 +42,13 @@ namespace OcspResponder.Composition
 #endif
                 .UseStartup<Startup>();
 
+#if MINIMAL_BUILD
+#pragma warning disable CA1801 // Review unused parameters -- required for other build configuration
+#endif
         private static void ConfigureLogging(HostBuilderContext builderContext, ILoggingBuilder loggingBuilder)
+#if MINIMAL_BUILD
+#pragma warning restore CA1801 // Review unused parameters
+#endif
         {
             loggingBuilder.AddFilter(
                 (category, level) => level >= LogLevel.Warning
