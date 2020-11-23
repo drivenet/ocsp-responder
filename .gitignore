@@ -2,7 +2,7 @@
 *.user
 obj/
 bin/
-packages/
+/packages/
 .vs/
 launchSettings.json
-db/
+/db/
