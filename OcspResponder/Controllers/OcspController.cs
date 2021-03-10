@@ -19,9 +19,9 @@ namespace OcspResponder.Controllers
         }
 
         [HttpGet]
-#pragma warning disable CA1801 // Review unused parameters -- required to match encoded route
+#pragma warning disable IDE0060 // Remove unused parameter -- required to match encoded route
         public async Task<OcspActionResult> Get(string encoded)
-#pragma warning restore CA1801 // Review unused parameters
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             var ocspHttpRequest = await Request.ToOcspHttpRequest();
             var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest, CreateMetadata());

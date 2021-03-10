@@ -2,18 +2,23 @@
   <Import Project="..\shared\Minimal.props" />
 
   <PropertyGroup>
-    <TargetFramework>$(NewApplicationTargetFramework)</TargetFramework>
-    <AssemblyName>ocsp-responder</AssemblyName>
-    <Version>0.1.11</Version>
+    <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
     <Nullable>enable</Nullable>
-    <NoWarn>$(NoWarn);CA2007</NoWarn>
+    <AssemblyName>ocsp-responder</AssemblyName>
+    <Version>0.2.3</Version>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="OcspResponder.AspNetCore" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="3.1.8" Condition="$(MinimalBuild) != true" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="3.1.8" Condition="$(MinimalBuild) != true" />
-    <PackageReference Include="Tmds.Systemd.Logging" Version="0.7.0" Condition="$(MinimalBuild) != true" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" Condition="$(MinimalBuild) != true" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
+    <PackageReference Include="Tmds.Systemd.Logging" Version="0.8.0" Condition="$(MinimalBuild) != true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

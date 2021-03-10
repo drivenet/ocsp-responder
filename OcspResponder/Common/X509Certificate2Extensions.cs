@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace OcspResponder.Common
@@ -12,9 +13,14 @@ namespace OcspResponder.Common
 
         public static RSA GetRSACngPrivateKey(this X509Certificate2 certificate)
         {
+            if (certificate.PrivateKey is not { } privateKey)
+            {
+                throw new ArgumentException("Missing certificate private key.", nameof(certificate));
+            }
+
             var keyBytes = new byte[64];
             _rng.GetBytes(keyBytes);
-            var exportedKey = certificate.PrivateKey.ExportEncryptedPkcs8PrivateKey(keyBytes, ExportParameters);
+            var exportedKey = privateKey.ExportEncryptedPkcs8PrivateKey(keyBytes, ExportParameters);
             var result = RSA.Create();
             try
             {

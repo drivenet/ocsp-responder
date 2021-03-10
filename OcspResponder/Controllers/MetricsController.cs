@@ -32,7 +32,7 @@ namespace OcspResponder.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var connection = context.HttpContext.Connection;
-            if (!connection.RemoteIpAddress.Equals(connection.LocalIpAddress))
+            if (connection.RemoteIpAddress?.Equals(connection.LocalIpAddress) != true)
             {
                 context.Result = StatusCode(StatusCodes.Status403Forbidden);
                 return;

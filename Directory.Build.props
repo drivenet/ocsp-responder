@@ -1,0 +1,5 @@
+﻿<Project>
+  <PropertyGroup Label="TopLevelPaths">
+    <DnetSharedPath>$(MSBuildThisFileDirectory)\shared</DnetSharedPath>
+  </PropertyGroup>
+</Project>

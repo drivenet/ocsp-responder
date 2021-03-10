@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 
 #if !MINIMAL_BUILD
 using Tmds.Systemd;
@@ -37,9 +36,6 @@ namespace OcspResponder.Composition
         private static IWebHostBuilder ConfigureWebHost(IWebHostBuilder webHost)
             => webHost
                 .UseKestrel((builderContext, options) => ConfigureKestrel(builderContext, options))
-#if !MINIMAL_BUILD
-                .UseLibuv()
-#endif
                 .UseStartup<Startup>();
 
 #if MINIMAL_BUILD
@@ -69,10 +65,9 @@ namespace OcspResponder.Composition
                  || !Journal.IsAvailable)
 #endif
             {
-                loggingBuilder.AddConsole(options =>
+                loggingBuilder.AddSystemdConsole(options =>
                 {
                     options.IncludeScopes = true;
-                    options.Format = ConsoleLoggerFormat.Systemd;
                     options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffffffzzz \""
                         + Environment.MachineName
                         + "\" \""
@@ -102,6 +97,9 @@ namespace OcspResponder.Composition
             }
 
 #if !MINIMAL_BUILD
+#if NET6_0_OR_GREATER
+            options.UseSystemd();
+#else
             // SD_LISTEN_FDS_START https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
             const ulong SdListenFdsStart = 3;
 
@@ -128,6 +126,7 @@ namespace OcspResponder.Composition
             {
                 options.ListenHandle(handle);
             }
+#endif
 #endif
         }
 

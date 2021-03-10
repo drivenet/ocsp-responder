@@ -7,8 +7,7 @@
     <LegacyTargetFramework>net472</LegacyTargetFramework>
     <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
     <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
-    <ApplicationTargetFramework>netcoreapp2.1</ApplicationTargetFramework>
-    <NewApplicationTargetFramework>netcoreapp3.1</NewApplicationTargetFramework>
+    <ApplicationTargetFramework>net5.0</ApplicationTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="MinimalProjectSettings">
@@ -17,14 +16,15 @@
     <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
     <Description>-</Description>
     <NeutralLanguage>en</NeutralLanguage>
-    <CodeAnalysisRuleSet>$(DnetSharedPath)\Default.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <Configurations>$(Configurations);Integration</Configurations>
     <DebugType>embedded</DebugType>
     <Platforms>x64</Platforms>
     <Platform>x64</Platform>
-    <NoWarn>IDE0057;IDE0060</NoWarn>
-    <WarningsAsErrors>CS8073;CS8597;CS8600;CS8601;CS8602;CS8603;CS8604;CS8605;CS8607;CS8618;CS8620;CS8624;CS8625;CS8631;CS8634;CS8655;CS8714;CS8762</WarningsAsErrors>
+    <AnalysisLevel>5</AnalysisLevel>
+    <WarningsAsErrors>CS8073;nullable</WarningsAsErrors>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">
@@ -39,7 +39,15 @@
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.261" />
   </ItemGroup>
+
+  <Target 
+        Name="MsBuildAL1073WarningWorkaround" 
+        BeforeTargets="GenerateSatelliteAssemblies"
+        Condition="'$(PlatformTarget)' == 'x64'">
+    <PropertyGroup>
+      <TargetFrameworkSDKToolsDirectory>$(TargetFrameworkSDKToolsDirectory)x64\</TargetFrameworkSDKToolsDirectory>
+    </PropertyGroup>
+  </Target>
 </Project>
