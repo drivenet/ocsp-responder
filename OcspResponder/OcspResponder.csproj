@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
+    <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <AssemblyName>ocsp-responder</AssemblyName>
     <Version>0.2.4</Version>
