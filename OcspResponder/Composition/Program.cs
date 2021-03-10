@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -112,7 +111,7 @@ namespace OcspResponder.Composition
                     const string ListenFds = "LISTEN_FDS";
                     if (Environment.GetEnvironmentVariable(ListenFds) is { } listenFdsString)
                     {
-                        if (byte.TryParse(listenFdsString, NumberStyles.None, NumberFormatInfo.InvariantInfo, out extraListenFds))
+                        if (byte.TryParse(listenFdsString, System.Globalization.NumberStyles.None, System.Globalization.NumberFormatInfo.InvariantInfo, out extraListenFds))
                         {
                             --extraListenFds;
                         }
