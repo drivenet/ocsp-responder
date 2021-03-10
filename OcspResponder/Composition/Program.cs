@@ -100,31 +100,25 @@ namespace OcspResponder.Composition
             options.UseSystemd();
 #else
             // SD_LISTEN_FDS_START https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
-            const ulong SdListenFdsStart = 3;
+            const int SdListenFdsStart = 3;
+            const string ListenFdsEnvVar = "LISTEN_FDS";
 
-            byte extraListenFds = 0;
             options.UseSystemd(listenOptions =>
             {
                 if (listenOptions.FileHandle == SdListenFdsStart)
                 {
-                    // LISTEN_FDS https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
-                    const string ListenFds = "LISTEN_FDS";
-                    if (Environment.GetEnvironmentVariable(ListenFds) is { } listenFdsString)
+                    // This matches sd_listen_fds behavior that requires %LISTEN_FDS% to be present and in range [1;INT_MAX-SD_LISTEN_FDS_START]
+                    if (int.TryParse(Environment.GetEnvironmentVariable(ListenFdsEnvVar), System.Globalization.NumberStyles.None, System.Globalization.NumberFormatInfo.InvariantInfo, out var listenFds)
+                        && listenFds > 1
+                        && listenFds <= int.MaxValue - SdListenFdsStart)
                     {
-                        if (byte.TryParse(listenFdsString, System.Globalization.NumberStyles.None, System.Globalization.NumberFormatInfo.InvariantInfo, out extraListenFds))
+                        for (var handle = SdListenFdsStart + 1; handle < SdListenFdsStart + listenFds; ++handle)
                         {
-                            --extraListenFds;
+                            options.ListenHandle((ulong)handle);
                         }
                     }
                 }
             });
-
-            for (ulong handle = SdListenFdsStart + 1, lastHandle = SdListenFdsStart + extraListenFds;
-                handle <= lastHandle;
-                ++handle)
-            {
-                options.ListenHandle(handle);
-            }
 #endif
 #endif
         }
