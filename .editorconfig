@@ -105,7 +105,7 @@ csharp_prefer_simple_default_expression = true:warning
 csharp_style_deconstructed_variable_declaration = true:suggestion
 csharp_style_inlined_variable_declaration = true:suggestion
 csharp_style_throw_expression = true:suggestion
-csharp_style_pattern_local_over_anonymous_function = true:warning
+csharp_style_pattern_local_over_anonymous_function = true:suggestion
 csharp_style_prefer_index_operator = true:warning
 csharp_style_prefer_range_operator = true:suggestion
 csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
@@ -114,9 +114,6 @@ csharp_style_unused_value_expression_statement_preference = discard_variable:non
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:warning
-
-# Modifier preferences
-csharp_prefer_static_local_function = true:warning
 
 ## C# Formatting Rules
 # New line preferences
@@ -276,7 +273,7 @@ dotnet_diagnostic.IDE0110.severity = warning
 dotnet_diagnostic.CA1000.severity = none
 dotnet_diagnostic.CA1002.severity = warning
 dotnet_code_quality.ca1002.api_surface = public, internal
-dotnet_diagnostic.CA1003.severity = warning
+dotnet_diagnostic.CA1003.severity = suggestion
 dotnet_diagnostic.CA1008.severity = warning
 dotnet_diagnostic.CA1012.severity = warning
 dotnet_diagnostic.CA1019.severity = warning
@@ -329,7 +326,7 @@ dotnet_diagnostic.CA1820.severity = warning
 dotnet_diagnostic.CA1823.severity = warning
 dotnet_diagnostic.CA2000.severity = warning
 dotnet_diagnostic.CA2002.severity = warning
-dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA2007.severity = warning
 dotnet_diagnostic.CA2008.severity = warning
 dotnet_diagnostic.CA2119.severity = warning
 dotnet_diagnostic.CA2153.severity = warning
@@ -454,6 +451,11 @@ dotnet_diagnostic.xUnit1026.severity = suggestion
 
 [*.{xml,csproj,props,build,targets,config,ruleset,nuspec,resx,vsixmanifest,browser}]
 indent_size = 2
+
+
+[*.resx]
+trim_trailing_whitespace = false
+insert_final_newline = false
 
 
 [*.json]

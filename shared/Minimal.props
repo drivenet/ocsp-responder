@@ -25,6 +25,7 @@
     <WarningsAsErrors>CS8073;nullable</WarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Features>strict</Features>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">
@@ -39,8 +40,23 @@
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.261" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.333" PrivateAssets="All" />
   </ItemGroup>
+
+  <Target 
+        Name="DisableAnalyzersForVisualStudioBuild" 
+        BeforeTargets="CoreCompile" 
+        Condition="('$(BuildingInsideVisualStudio)' == 'True' Or '$(DeployOnBuild)' == 'True')
+            And '$(BuildingProject)' == 'True' 
+            And '$(Configuration)' != 'Integration'">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)"/>
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup Label="MsBuildAL1073WarningFix">
+    <SdkToolsPathMaybeWithx64Architecture>C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64</SdkToolsPathMaybeWithx64Architecture>
+  </PropertyGroup>
 
   <Target 
         Name="MsBuildAL1073WarningWorkaround" 
