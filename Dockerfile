@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY shared shared
-COPY .editorconfig *.props ./
+COPY .editorconfig global.json *.props ./
 
 WORKDIR /src/OcspResponder
 COPY OcspResponder/OcspResponder.csproj .
