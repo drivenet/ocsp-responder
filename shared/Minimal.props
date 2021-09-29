@@ -19,8 +19,6 @@
     <LangVersion>latest</LangVersion>
     <Configurations>$(Configurations);Integration</Configurations>
     <DebugType>embedded</DebugType>
-    <Platforms>x64</Platforms>
-    <Platform>x64</Platform>
     <AnalysisLevel>5</AnalysisLevel>
     <WarningsAsErrors>CS8073;nullable</WarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -40,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.333" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354" PrivateAssets="All" />
   </ItemGroup>
 
   <Target 
@@ -52,18 +50,5 @@
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)"/>
     </ItemGroup>
-  </Target>
-
-  <PropertyGroup Label="MsBuildAL1073WarningFix">
-    <SdkToolsPathMaybeWithx64Architecture>C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64</SdkToolsPathMaybeWithx64Architecture>
-  </PropertyGroup>
-
-  <Target 
-        Name="MsBuildAL1073WarningWorkaround" 
-        BeforeTargets="GenerateSatelliteAssemblies"
-        Condition="'$(PlatformTarget)' == 'x64'">
-    <PropertyGroup>
-      <TargetFrameworkSDKToolsDirectory>$(TargetFrameworkSDKToolsDirectory)x64\</TargetFrameworkSDKToolsDirectory>
-    </PropertyGroup>
   </Target>
 </Project>
