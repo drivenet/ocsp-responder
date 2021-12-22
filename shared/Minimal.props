@@ -7,7 +7,7 @@
     <LegacyTargetFramework>net472</LegacyTargetFramework>
     <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
     <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
-    <ApplicationTargetFramework>net5.0</ApplicationTargetFramework>
+    <ApplicationTargetFramework>net6.0</ApplicationTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="MinimalProjectSettings">
@@ -19,11 +19,20 @@
     <LangVersion>latest</LangVersion>
     <Configurations>$(Configurations);Integration</Configurations>
     <DebugType>embedded</DebugType>
-    <AnalysisLevel>5</AnalysisLevel>
+    <AnalysisLevel>latest</AnalysisLevel>
     <WarningsAsErrors>CS8073;nullable</WarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <ShowMessageForImplicitlySkipAnalyzers>false</ShowMessageForImplicitlySkipAnalyzers>
     <Features>strict</Features>
+  </PropertyGroup>
+
+  <PropertyGroup Label="DevelopmentProjectSettings" Condition="'$(Configuration)' != 'Integration'">
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="ProductionProjectSettings" Condition="'$(Configuration)' != 'Debug'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">
@@ -38,17 +47,6 @@
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376" PrivateAssets="All" />
   </ItemGroup>
-
-  <Target 
-        Name="DisableAnalyzersForVisualStudioBuild" 
-        BeforeTargets="CoreCompile" 
-        Condition="('$(BuildingInsideVisualStudio)' == 'True' Or '$(DeployOnBuild)' == 'True')
-            And '$(BuildingProject)' == 'True' 
-            And '$(Configuration)' != 'Integration'">
-    <ItemGroup>
-      <Analyzer Remove="@(Analyzer)"/>
-    </ItemGroup>
-  </Target>
 </Project>

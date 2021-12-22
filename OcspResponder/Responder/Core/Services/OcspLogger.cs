@@ -15,10 +15,10 @@ namespace OcspResponder.Responder.Core.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public void Debug(string message) => _logger.LogDebug(message);
+        public void Debug(string message) => _logger.LogDebug("{Message}", message);
 
-        public void Error(string message) => _logger.LogError(message);
+        public void Error(string message) => _logger.LogError("{Message}", message);
 
-        public void Warn(string message) => _logger.LogWarning(message);
+        public void Warn(string message) => _logger.LogWarning("{Message}", message);
     }
 }

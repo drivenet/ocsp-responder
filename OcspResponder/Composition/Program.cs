@@ -96,30 +96,7 @@ namespace OcspResponder.Composition
             }
 
 #if !MINIMAL_BUILD
-#if NET6_0_OR_GREATER
             options.UseSystemd();
-#else
-            // SD_LISTEN_FDS_START https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
-            const int SdListenFdsStart = 3;
-            const string ListenFdsEnvVar = "LISTEN_FDS";
-
-            options.UseSystemd(listenOptions =>
-            {
-                if (listenOptions.FileHandle == SdListenFdsStart)
-                {
-                    // This matches sd_listen_fds behavior that requires %LISTEN_FDS% to be present and in range [1;INT_MAX-SD_LISTEN_FDS_START]
-                    if (int.TryParse(Environment.GetEnvironmentVariable(ListenFdsEnvVar), System.Globalization.NumberStyles.None, System.Globalization.NumberFormatInfo.InvariantInfo, out var listenFds)
-                        && listenFds > 1
-                        && listenFds <= int.MaxValue - SdListenFdsStart)
-                    {
-                        for (var handle = SdListenFdsStart + 1; handle < SdListenFdsStart + listenFds; ++handle)
-                        {
-                            options.ListenHandle((ulong)handle);
-                        }
-                    }
-                }
-            });
-#endif
 #endif
         }
 

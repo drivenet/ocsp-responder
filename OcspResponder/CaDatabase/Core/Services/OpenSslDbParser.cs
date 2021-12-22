@@ -112,7 +112,7 @@ namespace OcspResponder.CaDatabase.Core.Services
         private static DateTime ParseTimestamp(string timestampString)
         {
             if (!timestampString.EndsWith('Z')
-                || !ulong.TryParse(timestampString.Substring(0, timestampString.Length - 1), NumberStyles.None, NumberFormatInfo.InvariantInfo, out var expirationTicks))
+                || !ulong.TryParse(timestampString.AsSpan(0, timestampString.Length - 1), NumberStyles.None, NumberFormatInfo.InvariantInfo, out var expirationTicks))
             {
                 throw new ArgumentOutOfRangeException(nameof(timestampString), timestampString, "Invalid timestamp in certificate record.");
             }

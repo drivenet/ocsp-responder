@@ -6,14 +6,14 @@ namespace OcspResponder.Common
 {
     public static class X509Certificate2Extensions
     {
-        private static readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
 
         // Unsecure intentionally since export/import is done in-memory and password is auto-generated
         private static readonly PbeParameters ExportParameters = new PbeParameters(PbeEncryptionAlgorithm.Aes128Cbc, HashAlgorithmName.SHA1, 1);
 
         public static RSA GetRSACngPrivateKey(this X509Certificate2 certificate)
         {
-            if (certificate.PrivateKey is not { } privateKey)
+            if (certificate.GetRSAPrivateKey() is not { } privateKey)
             {
                 throw new ArgumentException("Missing certificate private key.", nameof(certificate));
             }
