@@ -1,7 +1,6 @@
-﻿namespace OcspResponder.CaDatabase.Services
+﻿namespace OcspResponder.CaDatabase.Services;
+
+public interface ICaDatabaseLoader
 {
-    public interface ICaDatabaseLoader
-    {
-        void Load();
-    }
+    void Load();
 }

@@ -6,70 +6,69 @@ using System.Security.Cryptography.X509Certificates;
 using OcspResponder.CaDatabase.Entities;
 using OcspResponder.CaDatabase.Services;
 
-namespace OcspResponder.CaDatabase.Core.Infrastructure
+namespace OcspResponder.CaDatabase.Core.Infrastructure;
+
+internal sealed class CaDatabaseStore : ICaDescriptionSource, ICaDatabaseUpdater, IDisposable
 {
-    internal sealed class CaDatabaseStore : ICaDescriptionSource, ICaDatabaseUpdater, IDisposable
+    private readonly object _lock = new();
+    private Dictionary<X509Certificate2, DefaultCaDescription> _store = new();
+    private Dictionary<X509Certificate2, DefaultCaDescription> _prevStore = new();
+
+    public IEnumerable<X509Certificate2> CaCertificates => _store.Select(pair => pair.Value.CaCertificate);
+
+    public void Update(IReadOnlyCollection<DefaultCaDescription> descriptions)
     {
-        private readonly object _lock = new object();
-        private Dictionary<X509Certificate2, DefaultCaDescription> _store = new Dictionary<X509Certificate2, DefaultCaDescription>();
-        private Dictionary<X509Certificate2, DefaultCaDescription> _prevStore = new Dictionary<X509Certificate2, DefaultCaDescription>();
-
-        public IEnumerable<X509Certificate2> CaCertificates => _store.Select(pair => pair.Value.CaCertificate);
-
-        public void Update(IReadOnlyCollection<DefaultCaDescription> descriptions)
+        var store = descriptions.ToDictionary(description => description.CaCertificate);
+        lock (_lock)
         {
-            var store = descriptions.ToDictionary(description => description.CaCertificate);
-            lock (_lock)
+            _prevStore = _store;
+            _store = store;
+            foreach (var certificate in _store.Keys)
             {
-                _prevStore = _store;
-                _store = store;
-                foreach (var certificate in _store.Keys)
+                if (_prevStore.Remove(certificate, out var description))
                 {
-                    if (_prevStore.Remove(certificate, out var description))
-                    {
-                        description.Dispose();
-                    }
+                    description.Dispose();
                 }
             }
         }
+    }
 
-        public CaDescription? Fetch(X509Certificate2 certificate)
+    public CaDescription? Fetch(X509Certificate2 certificate)
+    {
+        if (!_store.TryGetValue(certificate, out var description))
         {
-            if (!_store.TryGetValue(certificate, out var description))
-            {
-                _prevStore.TryGetValue(certificate, out description);
-            }
-
-            return description;
+            _prevStore.TryGetValue(certificate, out description);
         }
 
-        public void Dispose()
-        {
-            lock (_lock)
-            {
-                try
-                {
-                    foreach (var pair in _store.Values)
-                    {
-                        pair.Dispose();
-                    }
-                }
-                finally
-                {
-                    _store.Clear();
-                }
+        return description;
+    }
 
-                try
+    public void Dispose()
+    {
+        lock (_lock)
+        {
+            try
+            {
+                foreach (var pair in _store.Values)
                 {
-                    foreach (var pair in _prevStore.Values)
-                    {
-                        pair.Dispose();
-                    }
+                    pair.Dispose();
                 }
-                finally
+            }
+            finally
+            {
+                _store.Clear();
+            }
+
+            try
+            {
+                foreach (var pair in _prevStore.Values)
                 {
-                    _prevStore.Clear();
+                    pair.Dispose();
                 }
+            }
+            finally
+            {
+                _prevStore.Clear();
             }
         }
     }

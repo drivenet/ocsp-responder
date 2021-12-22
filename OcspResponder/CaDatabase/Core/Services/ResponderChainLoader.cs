@@ -8,94 +8,93 @@ using Microsoft.Extensions.Options;
 
 using static System.FormattableString;
 
-namespace OcspResponder.CaDatabase.Core.Services
+namespace OcspResponder.CaDatabase.Core.Services;
+
+internal sealed class ResponderChainLoader
 {
-    internal sealed class ResponderChainLoader
+    private readonly IOptionsMonitor<ResponderChainOptions> _options;
+
+    public ResponderChainLoader(IOptionsMonitor<ResponderChainOptions> options)
     {
-        private readonly IOptionsMonitor<ResponderChainOptions> _options;
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+    }
 
-        public ResponderChainLoader(IOptionsMonitor<ResponderChainOptions> options)
+    public (X509Certificate2 CaCertificate, X509Certificate2 ResponderCertificate) Load(string fileName)
+    {
+        var certificates = new X509Certificate2Collection();
+        try
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            certificates.Import(
+                fileName,
+                _options.CurrentValue.CertificatePassword,
+                X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.Exportable);
+
+            var count = certificates.Count;
+            if (count != 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(fileName), count, "The certificate file must contain exactly 2 certificates.");
+            }
+
+            var caCertificate = certificates[0];
+            ValidateCaCertificate(certificates[0]);
+            var responderCertificate = certificates[1];
+            ValidateResponderCertificate(responderCertificate, caCertificate);
+
+            return (caCertificate, responderCertificate);
+        }
+        catch (Exception exception)
+        {
+            foreach (var certificate in certificates)
+            {
+                certificate.Dispose();
+            }
+
+            throw new InvalidDataException(Invariant($"Failed to load certificates from file \"{fileName}\"."), exception);
+        }
+    }
+
+    private static void ValidateCaCertificate(X509Certificate2 caCertificate)
+    {
+        var issuerExtensions = caCertificate.Extensions;
+        var isCertificateAuthority = issuerExtensions.OfType<X509BasicConstraintsExtension>().SingleOrDefault()?.CertificateAuthority ?? false;
+        if (!isCertificateAuthority)
+        {
+            throw new ArgumentOutOfRangeException(nameof(caCertificate), caCertificate.Thumbprint, "The certificate does not represent a CA.");
         }
 
-        public (X509Certificate2 CaCertificate, X509Certificate2 ResponderCertificate) Load(string fileName)
+        var keyUsages = issuerExtensions.OfType<X509KeyUsageExtension>().SingleOrDefault()?.KeyUsages ?? X509KeyUsageFlags.None;
+        if ((keyUsages & (X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign)) != (X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign))
         {
-            var certificates = new X509Certificate2Collection();
-            try
-            {
-                certificates.Import(
-                    fileName,
-                    _options.CurrentValue.CertificatePassword,
-                    X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.Exportable);
-
-                var count = certificates.Count;
-                if (count != 2)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(fileName), count, "The certificate file must contain exactly 2 certificates.");
-                }
-
-                var caCertificate = certificates[0];
-                ValidateCaCertificate(certificates[0]);
-                var responderCertificate = certificates[1];
-                ValidateResponderCertificate(responderCertificate, caCertificate);
-
-                return (caCertificate, responderCertificate);
-            }
-            catch (Exception exception)
-            {
-                foreach (var certificate in certificates)
-                {
-                    certificate.Dispose();
-                }
-
-                throw new InvalidDataException(Invariant($"Failed to load certificates from file \"{fileName}\"."), exception);
-            }
+            throw new ArgumentOutOfRangeException(nameof(caCertificate), caCertificate.Thumbprint, "The certificate does not represent a key+CRL signing CA.");
         }
 
-        private static void ValidateCaCertificate(X509Certificate2 caCertificate)
+        caCertificate.Verify();
+    }
+
+    private static void ValidateResponderCertificate(X509Certificate2 responderCertificate, X509Certificate2 caCertificate)
+    {
+        if (responderCertificate.Issuer != caCertificate.Subject)
         {
-            var issuerExtensions = caCertificate.Extensions;
-            var isCertificateAuthority = issuerExtensions.OfType<X509BasicConstraintsExtension>().SingleOrDefault()?.CertificateAuthority ?? false;
-            if (!isCertificateAuthority)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), caCertificate.Thumbprint, "The certificate does not represent a CA.");
-            }
-
-            var keyUsages = issuerExtensions.OfType<X509KeyUsageExtension>().SingleOrDefault()?.KeyUsages ?? X509KeyUsageFlags.None;
-            if ((keyUsages & (X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign)) != (X509KeyUsageFlags.KeyCertSign | X509KeyUsageFlags.CrlSign))
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), caCertificate.Thumbprint, "The certificate does not represent a key+CRL signing CA.");
-            }
-
-            caCertificate.Verify();
+            throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate was not issued by CA represented by the first one.");
         }
 
-        private static void ValidateResponderCertificate(X509Certificate2 responderCertificate, X509Certificate2 caCertificate)
+        var responderExtensions = responderCertificate.Extensions;
+        var isCertificateAuthority = responderExtensions.OfType<X509BasicConstraintsExtension>().SingleOrDefault()?.CertificateAuthority ?? false;
+        if (isCertificateAuthority)
         {
-            if (responderCertificate.Issuer != caCertificate.Subject)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate was not issued by CA represented by the first one.");
-            }
+            throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate represents a CA.");
+        }
 
-            var responderExtensions = responderCertificate.Extensions;
-            var isCertificateAuthority = responderExtensions.OfType<X509BasicConstraintsExtension>().SingleOrDefault()?.CertificateAuthority ?? false;
-            if (isCertificateAuthority)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate represents a CA.");
-            }
+        var keyUsages = responderExtensions.OfType<X509KeyUsageExtension>().SingleOrDefault()?.KeyUsages ?? X509KeyUsageFlags.None;
+        if ((keyUsages & X509KeyUsageFlags.DigitalSignature) != X509KeyUsageFlags.DigitalSignature)
+        {
+            throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate cannot produce digital signatures.");
+        }
 
-            var keyUsages = responderExtensions.OfType<X509KeyUsageExtension>().SingleOrDefault()?.KeyUsages ?? X509KeyUsageFlags.None;
-            if ((keyUsages & X509KeyUsageFlags.DigitalSignature) != X509KeyUsageFlags.DigitalSignature)
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate cannot produce digital signatures.");
-            }
-
-            var ekus = (responderExtensions.OfType<X509EnhancedKeyUsageExtension>().SingleOrDefault()?.EnhancedKeyUsages ?? new OidCollection()).Cast<Oid>();
-            if (!ekus.Any(eku => eku.FriendlyName == "OCSP Signing"))
-            {
-                throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate cannot sign OCSP responses.");
-            }
+        var ekus = (responderExtensions.OfType<X509EnhancedKeyUsageExtension>().SingleOrDefault()?.EnhancedKeyUsages ?? new OidCollection()).Cast<Oid>();
+        if (!ekus.Any(eku => eku.FriendlyName == "OCSP Signing"))
+        {
+            throw new ArgumentOutOfRangeException(nameof(caCertificate), responderCertificate.Thumbprint, "The responder certificate cannot sign OCSP responses.");
         }
     }
 }

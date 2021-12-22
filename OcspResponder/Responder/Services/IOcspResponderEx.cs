@@ -2,10 +2,9 @@
 
 using OcspResponder.Core;
 
-namespace OcspResponder.Responder.Services
+namespace OcspResponder.Responder.Services;
+
+public interface IOcspResponderEx
 {
-    public interface IOcspResponderEx
-    {
-        Task<OcspHttpResponse> Respond(OcspHttpRequest httpRequest, RequestMetadata metadata);
-    }
+    Task<OcspHttpResponse> Respond(OcspHttpRequest httpRequest, RequestMetadata metadata);
 }

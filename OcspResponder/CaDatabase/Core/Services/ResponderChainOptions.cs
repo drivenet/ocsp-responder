@@ -1,13 +1,12 @@
-﻿namespace OcspResponder.CaDatabase.Core.Services
-{
-    internal sealed class ResponderChainOptions
-    {
-        private string? _certificatePassword;
+﻿namespace OcspResponder.CaDatabase.Core.Services;
 
-        public string CertificatePassword
-        {
-            get => _certificatePassword ?? "";
-            set => _certificatePassword = value;
-        }
+internal sealed class ResponderChainOptions
+{
+    private string? _certificatePassword;
+
+    public string CertificatePassword
+    {
+        get => _certificatePassword ?? "";
+        set => _certificatePassword = value;
     }
 }

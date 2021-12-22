@@ -1,22 +1,21 @@
-﻿namespace OcspResponder.CaDatabase.Core.Services
+﻿namespace OcspResponder.CaDatabase.Core.Services;
+
+internal sealed class CaDatabaseOptions
 {
-    internal sealed class CaDatabaseOptions
+    private string? _databasePath;
+
+    public string DatabasePath
     {
-        private string? _databasePath;
-
-        public string DatabasePath
+        get => _databasePath ?? "db";
+        set
         {
-            get => _databasePath ?? "db";
-            set
+            var path = value?.TrimEnd();
+            if (path?.Length == 0)
             {
-                var path = value?.TrimEnd();
-                if (path?.Length == 0)
-                {
-                    path = null;
-                }
-
-                _databasePath = path;
+                path = null;
             }
+
+            _databasePath = path;
         }
     }
 }

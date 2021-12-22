@@ -2,16 +2,15 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace OcspResponder.CaDatabase.Entities
+namespace OcspResponder.CaDatabase.Entities;
+
+public abstract class CaDescription
 {
-    public abstract class CaDescription
-    {
-        public abstract X509Certificate2 CaCertificate { get; }
+    public abstract X509Certificate2 CaCertificate { get; }
 
-        public abstract X509Certificate2 ResponderCertificate { get; }
+    public abstract X509Certificate2 ResponderCertificate { get; }
 
-        public abstract AsymmetricAlgorithm ResponderPrivateKey { get; }
+    public abstract AsymmetricAlgorithm ResponderPrivateKey { get; }
 
-        public abstract CertificateRecord? Fetch(BigInteger serial);
-    }
+    public abstract CertificateRecord? Fetch(BigInteger serial);
 }

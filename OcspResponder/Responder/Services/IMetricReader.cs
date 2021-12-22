@@ -1,9 +1,8 @@
-﻿namespace OcspResponder.Responder.Services
-{
-    public interface IMetricReader
-    {
-        ulong Requests { get; }
+﻿namespace OcspResponder.Responder.Services;
 
-        ulong Errors { get; }
-    }
+public interface IMetricReader
+{
+    ulong Requests { get; }
+
+    ulong Errors { get; }
 }

@@ -1,9 +1,8 @@
-﻿namespace OcspResponder.Responder.Core
-{
-    public interface IMetricRecorder
-    {
-        void RecordRequest();
+﻿namespace OcspResponder.Responder.Core;
 
-        void RecordError();
-    }
+public interface IMetricRecorder
+{
+    void RecordRequest();
+
+    void RecordError();
 }
