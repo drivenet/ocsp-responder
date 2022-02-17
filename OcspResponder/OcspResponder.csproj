@@ -9,6 +9,7 @@
     <Version>0.3.1</Version>
     <NoWarn>$(NoWarn);CA2007;CA1848</NoWarn>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
