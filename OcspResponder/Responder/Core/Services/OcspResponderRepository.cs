@@ -51,7 +51,7 @@ internal sealed class OcspResponderRepository : IOcspResponderRepository
 
     public Task<bool> SerialExists(string serial, X509Certificate2 issuerCertificate)
     {
-        var exists = _caDescriptions.Fetch(issuerCertificate)?.Fetch(CertificateUtils.GetSerialNumber(serial)) is object;
+        var exists = _caDescriptions.Fetch(issuerCertificate)?.Fetch(CertificateUtils.GetSerialNumber(serial)) is not null;
         return Task.FromResult(exists);
     }
 

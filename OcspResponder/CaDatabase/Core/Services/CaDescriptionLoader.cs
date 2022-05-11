@@ -28,8 +28,7 @@ internal sealed class CaDescriptionLoader
         try
         {
             var responderPrivateKey = responderCertificate.GetRSACngPrivateKey();
-
-            return new DefaultCaDescription(caCertificate, responderCertificate, responderPrivateKey, records);
+            return new(caCertificate, responderCertificate, responderPrivateKey, records);
         }
         catch
         {

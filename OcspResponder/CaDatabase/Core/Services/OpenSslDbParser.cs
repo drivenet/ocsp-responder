@@ -33,7 +33,7 @@ internal sealed class OpenSslDbParser
                 throw new FormatException(Invariant($"Invalid certificate record at line {lineNumber}."), exception);
             }
 
-            if (record is object)
+            if (record is not null)
             {
                 records.Add(record);
             }

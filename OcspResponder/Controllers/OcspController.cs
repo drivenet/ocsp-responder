@@ -25,7 +25,7 @@ public sealed class OcspController : Controller
     {
         var ocspHttpRequest = await Request.ToOcspHttpRequest();
         var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest, CreateMetadata());
-        return new OcspActionResult(ocspHttpResponse);
+        return new(ocspHttpResponse);
     }
 
     [HttpPost]
@@ -33,7 +33,7 @@ public sealed class OcspController : Controller
     {
         var ocspHttpRequest = await Request.ToOcspHttpRequest();
         var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest, CreateMetadata());
-        return new OcspActionResult(ocspHttpResponse);
+        return new(ocspHttpResponse);
     }
 
     private RequestMetadata CreateMetadata() => new(HttpContext.Connection.RemoteIpAddress);
