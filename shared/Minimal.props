@@ -21,6 +21,7 @@
     <DebugType>embedded</DebugType>
     <AnalysisLevel>latest</AnalysisLevel>
     <WarningsAsErrors>CS8073;nullable</WarningsAsErrors>
+    <MSBuildWarningsAsErrors>CS8785</MSBuildWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <ShowMessageForImplicitlySkipAnalyzers>false</ShowMessageForImplicitlySkipAnalyzers>
@@ -35,6 +36,10 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Label="IntegrationProjectSettings" Condition="'$(Configuration)' == 'Integration'">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
   <ItemGroup Label="MinimalAnalyzerFiles">
     <AdditionalFiles Include="$(DnetSharedPath)\stylecop.json">
       <Link>stylecop.json</Link>
@@ -47,6 +52,6 @@
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="All" />
   </ItemGroup>
 </Project>
