@@ -8,7 +8,7 @@ COPY OcspResponder/OcspResponder.csproj .
 RUN dotnet restore -r linux-x64 -p:MinimalBuild=true
 
 COPY OcspResponder .
-RUN dotnet publish -c Integration -r linux-x64 --self-contained false --no-restore -p:MinimalBuild=true -o /app && \
+RUN dotnet publish -c Integration -r linux-x64 --no-self-contained --no-restore -p:MinimalBuild=true -o /app && \
     rm /app/*.deps.json
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
