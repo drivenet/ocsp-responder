@@ -27,9 +27,9 @@ public static class Program
             .ConfigureWebHost(webHost => ConfigureWebHost(webHost))
             .ConfigureLogging((builderContext, loggingBuilder) => ConfigureLogging(builderContext, loggingBuilder))
 #if !MINIMAL_BUILD
-                .UseSystemd()
+            .UseSystemd()
 #endif
-                .ConfigureAppConfiguration((builderContext, configBuilder) => ConfigureAppConfiguration(args, builderContext, configBuilder))
+            .ConfigureAppConfiguration((builderContext, configBuilder) => ConfigureAppConfiguration(args, builderContext, configBuilder))
             .Build();
 
     private static IWebHostBuilder ConfigureWebHost(IWebHostBuilder webHost)
