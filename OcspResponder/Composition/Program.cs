@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Net;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -82,6 +84,12 @@ public static class Program
         options.Limits.MaxRequestLineSize = 2048;
         options.Limits.MaxRequestBodySize = 65536;
         options.Limits.MaxRequestHeadersTotalSize = 4096;
+
+        if (Environment.GetEnvironmentVariable("PORT") is { } portValue
+            && ushort.TryParse(portValue, NumberStyles.None, NumberFormatInfo.InvariantInfo, out var port))
+        {
+            options.ListenLocalhost(port);
+        }
 
         var kestrelSection = builderContext.Configuration.GetSection("Kestrel");
         options.Configure(kestrelSection);
