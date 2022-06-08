@@ -8,6 +8,12 @@ The responder itself can be configured with `appsettings.json` along with `OCSPR
 The web host is configured as a [normal ASP.NET Core app](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-6.0#host).
 For serverless containers compatibility, the `PORT` envvar is supported, which forces the responder to listen on `http://localhost:<PORT>`.
 
+## Additional endpoints
+- `/healthcheck` -- perform a healthcheck
+- `/version` -- get version
+- `/v0.1/metrics/requests` -- number of OCSP requests
+- `/v0.1/metrics/errors` -- number of OCSP errors
+
 ## Systemd
 It has full support for running via `systemd`, including `Type=notify` unit, socket inheritance via Libuv, journald logging, etc.
 
