@@ -29,6 +29,22 @@ public sealed class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        ConfigureApplication(services);
+    }
+
+#pragma warning disable CA1822 // Mark members as static -- future-proofing
+    public void Configure(IApplicationBuilder app)
+#pragma warning restore CA1822 // Mark members as static
+    {
+        app.UseRouting();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+    }
+
+    private void ConfigureApplication(IServiceCollection services)
+    {
         services.AddSingleton<CaDatabaseStore>();
         services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDatabaseStore>());
         services.AddSingleton<ICaDatabaseUpdater>(
@@ -72,16 +88,5 @@ public sealed class Startup
                 provider.GetRequiredService<OcspLogger>(),
                 provider.GetRequiredService<IMetricRecorder>()));
         services.AddHostedService<CaDatabaseLoaderService>();
-    }
-
-#pragma warning disable CA1822 // Mark members as static -- future-proofing
-    public void Configure(IApplicationBuilder app)
-#pragma warning restore CA1822 // Mark members as static
-    {
-        app.UseRouting();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
     }
 }
