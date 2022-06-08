@@ -29,6 +29,9 @@ public sealed class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        services.AddHealthChecks()
+            .AddCheck<Web.CaDescriptionsHealthcheck>("ca")
+            .AddCheck<Web.RepositoryHealthcheck>("repository");
         ConfigureApplication(services);
     }
 
@@ -40,6 +43,7 @@ public sealed class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapHealthChecks("/healthcheck");
         });
     }
 
