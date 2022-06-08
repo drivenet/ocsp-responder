@@ -6,7 +6,7 @@ I needed an OCSP responder for our internal PKI and found a [wonderful library](
 ## Configuration
 The responder itself can be configured with `appsettings.json` along with `OCSPR_...` environment variables, when configuration file is used, it is automatically reloaded on change.
 The web host is configured as a [normal ASP.NET Core app](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-6.0#host).
-For serverless containers compatibility, the `PORT` envvar is supported, which forces the responder to listen on http://localhost:<PORT>.
+For serverless containers compatibility, the `PORT` envvar is supported, which forces the responder to listen on `http://localhost:<PORT>`.
 
 ## Systemd
 It has full support for running via `systemd`, including `Type=notify` unit, socket inheritance via Libuv, journald logging, etc.
