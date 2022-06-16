@@ -20,7 +20,7 @@
     <Configurations>$(Configurations);Integration</Configurations>
     <DebugType>embedded</DebugType>
     <AnalysisLevel>latest</AnalysisLevel>
-    <WarningsAsErrors>CS8073;nullable</WarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);CS8073;nullable</WarningsAsErrors>
     <MSBuildWarningsAsErrors>CS8785</MSBuildWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -38,6 +38,7 @@
 
   <PropertyGroup Label="IntegrationProjectSettings" Condition="'$(Configuration)' == 'Integration'">
     <Optimize>true</Optimize>
+    <NoWarn>$(NoWarn);SA1201;SA1202;SA1203;SA1214;SA1402;SA1649</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">
