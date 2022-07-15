@@ -1,52 +1,148 @@
-*.doc  diff=astextplain
-*.DOC	diff=astextplain
-*.docx	diff=astextplain
-*.DOCX	diff=astextplain
-*.dot	diff=astextplain
-*.DOT	diff=astextplain
-*.pdf	diff=astextplain
-*.PDF	diff=astextplain
-*.rtf	diff=astextplain
-*.RTF	diff=astextplain
+* text=auto
 
-*.jpg  	binary
-*.png 	binary
-*.gif 	binary
+AUTHORS text
+CHANGELOG text
+CHANGES text
+CONTRIBUTING text
+COPYING text
+INSTALL text
+LICENSE text
+README* text
 
-*.cs text=auto diff=csharp 
-*.vb text=auto
-*.resx text=auto
-*.c text=auto
-*.cpp text=auto
-*.cxx text=auto
-*.h text=auto
-*.hxx text=auto
-*.py text=auto
-*.rb text=auto
-*.java text=auto
-*.html text=auto
-*.htm text=auto
-*.css text=auto
-*.scss text=auto
-*.sass text=auto
-*.less text=auto
-*.js text=auto
-*.lisp text=auto
-*.clj text=auto
-*.sql text=auto
-*.php text=auto
-*.lua text=auto
-*.m text=auto
-*.asm text=auto
-*.erl text=auto
-*.fs text=auto
-*.fsx text=auto
-*.hs text=auto
+*.txt text
+*.doc diff=astextplain
+*.docx diff=astextplain
+*.dot diff=astextplain
+*.pdf diff=astextplain
+*.rtf diff=astextplain
+*.markdown text diff=markdown
+*.md text diff=markdown
 
-*.csproj text=auto
-*.vbproj text=auto
-*.fsproj text=auto
-*.dbproj text=auto
-*.sln text=auto eol=crlf
+*.in text eol=lf
+*.sh text eol=lf diff=bash
+*.bash text eol=lf diff=bash
+*.zsh text eol=lf
 
-*.sh eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+*.c text diff=cpp
+*.cpp text diff=cpp
+*.cxx text diff=cpp
+*.h text diff=cpp
+*.hpp text diff=cpp
+*.hxx text diff=cpp
+*.inc text diff=cpp
+
+*.csr text -diff eol=lf
+*.crt text -diff eol=lf
+*.pem text -diff eol=lf
+*.cer binary
+*.der binary
+*.pfx binary
+*.p12 binary
+
+*.asm text
+*.pl text diff=perl
+*.rb text eol=lf diff=ruby
+*.py text eol=lf diff=python
+*.php text diff=php
+*.java text diff=java
+*.lua text
+*.go text diff=golang
+*.rs text diff=rust
+
+*.js text
+*.cjs text
+*.ts text
+*.tsx text
+*.css text diff=css
+*.scss text diff=css
+*.less text
+*.htm text diff=html
+*.html text diff=html
+*.xhtml text diff=html
+
+*.service text eol=lf
+*.pp text
+*.erb text eol=lf
+*.epp text eol=lf
+
+*.rc text eol=lf
+*.ini text
+*.toml text
+*.yaml text
+*.yml text
+*.xml text
+*.json text
+
+*.cfg text
+*.conf text
+*.config text
+
+Makefile text
+makefile text
+Gemfile text
+Rakefile text
+Dockerfile text
+
+.editorconfig text
+.globalconfig text
+
+*.cs text diff=csharp
+*.resx text
+*.fs text
+*.fsx text
+*.props text
+*.targets text
+*.cshtml text diff=html
+*.sln text eol=crlf merge=union
+*.csproj text merge=union
+
+*.tf text
+*.tfrc text
+*.hcl text
+*.tftpl text eol=lf
+*.lock.hcl text -diff
+
+*.patch -text
+
+package-lock.json text -diff
+*.lock text -diff
+
+*.exe binary
+*.dll binary
+*.pyc binary
+
+*.bmp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tif binary
+*.tiff binary
+*.ico binary
+*.eps binary
+*.psd binary
+*.webp binary
+*.svg text
+
+*.7z binary
+*.br binary
+*.gz binary
+*.bz2 binary
+*.rar binary
+*.tar binary
+*.tgz binary
+*.zip binary
+*.jar binary
+*.apk binary
+
+*.ttf binary
+*.woff binary
+*.woff2 binary
+
+.gitattributes text export-ignore
+.gitignore text export-ignore
+.gitkeep text export-ignore

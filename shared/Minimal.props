@@ -38,7 +38,7 @@
 
   <PropertyGroup Label="IntegrationProjectSettings" Condition="'$(Configuration)' == 'Integration'">
     <Optimize>true</Optimize>
-    <NoWarn>$(NoWarn);SA1201;SA1202;SA1203;SA1214;SA1402;SA1649</NoWarn>
+    <NoWarn>$(NoWarn);SA1107;SA1116;SA1117;SA1201;SA1202;SA1203;SA1214;SA1402;SA1649</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">

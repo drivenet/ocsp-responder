@@ -1,0 +1,10 @@
+{
+	"recommendations": [
+        "editorconfig.editorconfig",
+		"trunk.io",
+		"yzhang.markdown-all-in-one",
+		"davidanson.vscode-markdownlint",
+		"streetsidesoftware.code-spell-checker",
+		"streetsidesoftware.code-spell-checker-russian",
+	],
+}
