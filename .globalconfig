@@ -28,7 +28,7 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 dotnet_style_readonly_field = true:warning
 
 # Parameter preferences
-dotnet_code_quality_unused_parameters = all:warning
+dotnet_code_quality_unused_parameters = non_public:warning
 
 # Expression-level preferences
 dotnet_style_coalesce_expression = true:suggestion
@@ -300,9 +300,11 @@ dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1710.severity = none
 dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1713.severity = none
+dotnet_diagnostic.CA1715.severity = none # Now handled by Code-style naming rules
 dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1720.severity = none
 dotnet_diagnostic.CA1721.severity = warning
-dotnet_diagnostic.CA1724.severity = warning
+dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1802.severity = warning
 dotnet_code_quality.CA1802.required_modifiers = none
 dotnet_diagnostic.CA1810.severity = warning
@@ -440,6 +442,8 @@ dotnet_diagnostic.SX1101.severity = warning
 dotnet_diagnostic.SX1309.severity = warning
 
 # xUnit rules
+dotnet_diagnostic.xUnit1000.severity = error
+dotnet_diagnostic.xUnit1004.severity = none
 dotnet_diagnostic.xUnit1026.severity = suggestion
 
 # Roslyn rules

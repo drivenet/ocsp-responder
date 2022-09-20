@@ -50,6 +50,8 @@ trim_trailing_whitespace = true
 [robots.txt]
 charset = utf-8
 
+[*.{css,less}]
+trim_trailing_whitespace = true
 
 [*.{js,cjs,ts}]
 charset = utf-8

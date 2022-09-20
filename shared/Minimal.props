@@ -42,17 +42,22 @@
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">
-    <AdditionalFiles Include="$(DnetSharedPath)\stylecop.json">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json">
       <Link>stylecop.json</Link>
       <Visible>false</Visible>
     </AdditionalFiles>
-    <AdditionalFiles Include="$(DnetSharedPath)\CodeMetricsConfig.txt">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\CodeMetricsConfig.txt">
       <Link>CodeMetricsConfig.txt</Link>
+      <Visible>false</Visible>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\BannedSymbols.txt">
+      <Link>BannedSymbols.Dnet.Shared.txt</Link>
       <Visible>false</Visible>
     </AdditionalFiles>
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3" PrivateAssets="All" />
   </ItemGroup>
 </Project>
