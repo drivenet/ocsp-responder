@@ -8,6 +8,7 @@
     <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
     <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
     <ApplicationTargetFramework>net6.0</ApplicationTargetFramework>
+    <GeneratorTargetFramework>net472</GeneratorTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="MinimalProjectSettings">
@@ -58,6 +59,6 @@
 
   <ItemGroup Label="MinimalAnalyzerReferences">
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" PrivateAssets="All" />
   </ItemGroup>
 </Project>

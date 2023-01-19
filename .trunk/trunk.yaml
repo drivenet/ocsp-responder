@@ -1,7 +1,0 @@
-version: 0.1
-cli:
-  version: 0.14.0-beta
-lint:
-  enabled:
-    - gitleaks@8.8.7
-    - markdownlint@0.31.1
