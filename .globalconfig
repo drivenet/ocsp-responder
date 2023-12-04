@@ -237,6 +237,9 @@ dotnet_analyzer_diagnostic.category-Style.severity = default
 dotnet_code_quality.api_surface = all
 
 # Tune severity
+# C# warnings that should really be errors
+dotnet_diagnostic.CS8509.severity = error
+
 # Dispose rules (CA2000 and CA2213) ported to IDE analyzers. We already execute the CA rules, so disable the IDE ones.
 dotnet_diagnostic.IDE0067.severity = none
 dotnet_diagnostic.IDE0068.severity = none
@@ -245,11 +248,13 @@ dotnet_diagnostic.IDE0069.severity = none
 # Correctness IDE rules
 dotnet_diagnostic.IDE0010.severity = suggestion
 dotnet_diagnostic.IDE0072.severity = suggestion
+dotnet_diagnostic.IDE0251.severity = error
 
 # Style IDE rules
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0018.severity = suggestion
 dotnet_diagnostic.IDE0035.severity = warning
+dotnet_diagnostic.IDE0037.severity = none # Following this rule can break a lot of code when renaming
 dotnet_diagnostic.IDE0051.severity = warning
 dotnet_diagnostic.IDE0052.severity = warning
 dotnet_diagnostic.IDE0055.severity = warning

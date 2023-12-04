@@ -27,12 +27,12 @@ insert_final_newline = false
 
 
 [*.json]
-charset = utf-8-bom
+charset = utf-8
 indent_size = 2
 
 
 [*.md]
-charset = utf-8-bom
+charset = utf-8
 indent_size = 2
 
 
