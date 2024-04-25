@@ -48,7 +48,7 @@ public static class Program
     {
         loggingBuilder.AddFilter(
             (category, level) => level >= LogLevel.Warning
-                || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
+                || (level >= LogLevel.Information && category?.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase) != true));
 
 #if !MINIMAL_BUILD
         if (Journal.IsSupported)
@@ -109,7 +109,7 @@ public static class Program
 
     private static IConfigurationBuilder ConfigureAppConfiguration(string[] args, HostBuilderContext builderContext, IConfigurationBuilder configBuilder)
         => configBuilder
-            .AddJsonFile(builderContext.Configuration.GetValue("ConfigPath", "appsettings.json"), optional: true, reloadOnChange: true)
+            .AddJsonFile(builderContext.Configuration["ConfigPath"] ?? "appsettings.json", optional: true, reloadOnChange: true)
             .AddCommandLine(args)
             .AddEnvironmentVariables("OCSPR_");
 }

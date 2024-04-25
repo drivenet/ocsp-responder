@@ -15,7 +15,7 @@ namespace OcspResponder.CaDatabase.Core.Services;
 internal sealed class OpenSslDbParser
 {
 #pragma warning disable CA1822 // Mark members as static -- future-proofing
-    public IReadOnlyList<CertificateRecord> Parse(TextReader reader, DateTimeOffset now)
+    public List<CertificateRecord> Parse(TextReader reader, DateTimeOffset now)
 #pragma warning restore CA1822 // Mark members as static
     {
         var records = new List<CertificateRecord>();
@@ -109,7 +109,7 @@ internal sealed class OpenSslDbParser
         return new CertificateRecord(serial, revokedOn);
     }
 
-    private static DateTime ParseTimestamp(string timestampString)
+    private static DateTimeOffset ParseTimestamp(string timestampString)
     {
         if (!timestampString.EndsWith('Z')
             || !ulong.TryParse(timestampString.AsSpan(0, timestampString.Length - 1), NumberStyles.None, NumberFormatInfo.InvariantInfo, out var expirationTicks))
@@ -123,6 +123,6 @@ internal sealed class OpenSslDbParser
         var hour = unchecked((int)((expirationTicks / 10000) % 100));
         var minute = unchecked((int)((expirationTicks / 100) % 100));
         var second = unchecked((int)(expirationTicks % 100));
-        return new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
+        return new(year, month, day, hour, minute, second, TimeSpan.Zero);
     }
 }

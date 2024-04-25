@@ -13,10 +13,12 @@ namespace OcspResponder.Web;
 internal sealed class RepositoryHealthcheck : IHealthCheck
 {
     private readonly IOcspResponderRepository _repository;
+    private readonly TimeProvider _timeProvider;
 
-    public RepositoryHealthcheck(IOcspResponderRepository repository)
+    public RepositoryHealthcheck(IOcspResponderRepository repository, TimeProvider timeProvider)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken)
@@ -24,7 +26,7 @@ internal sealed class RepositoryHealthcheck : IHealthCheck
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var now = DateTime.UtcNow;
+            var now = _timeProvider.GetUtcNow();
             var nextUpdateTask = _repository.GetNextUpdate();
             var certificates = await _repository.GetIssuerCertificates();
             foreach (var certificate in certificates)

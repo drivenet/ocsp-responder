@@ -38,7 +38,7 @@ internal sealed class CaDescriptionLoader
         }
     }
 
-    private IReadOnlyDictionary<BigInteger, CertificateRecord> LoadRecords(string dbFileName, DateTimeOffset now)
+    private Dictionary<BigInteger, CertificateRecord> LoadRecords(string dbFileName, DateTimeOffset now)
     {
         IReadOnlyList<CertificateRecord> records;
         using (var dbFile = new StreamReader(File.Open(dbFileName, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.ASCII, false, 256))

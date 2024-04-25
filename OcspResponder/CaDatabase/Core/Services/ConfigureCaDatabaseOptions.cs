@@ -7,7 +7,7 @@ namespace OcspResponder.CaDatabase.Core.Services;
 
 internal sealed class ConfigureCaDatabaseOptions : IPostConfigureOptions<CaDatabaseOptions>
 {
-    public void PostConfigure(string name, CaDatabaseOptions options)
+    public void PostConfigure(string? name, CaDatabaseOptions options)
     {
         var path = options.DatabasePath;
         if (!Path.IsPathFullyQualified(path))

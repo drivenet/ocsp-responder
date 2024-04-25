@@ -19,9 +19,7 @@ public sealed class OcspController : Controller
     }
 
     [HttpGet]
-#pragma warning disable IDE0060 // Remove unused parameter -- required to match encoded route
     public async Task<OcspActionResult> Get(string encoded)
-#pragma warning restore IDE0060 // Remove unused parameter
     {
         var ocspHttpRequest = await Request.ToOcspHttpRequest();
         var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest, CreateMetadata());

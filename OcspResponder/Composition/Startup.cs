@@ -35,9 +35,7 @@ public sealed class Startup
         ConfigureApplication(services);
     }
 
-#pragma warning disable CA1822 // Mark members as static -- future-proofing
     public void Configure(IApplicationBuilder app)
-#pragma warning restore CA1822 // Mark members as static
     {
         app.UseRouting();
         app.UseEndpoints(endpoints =>
@@ -49,6 +47,9 @@ public sealed class Startup
 
     private void ConfigureApplication(IServiceCollection services)
     {
+#pragma warning disable RS0030 // Do not use banned APIs -- required for DI
+        services.AddSingleton(TimeProvider.System);
+#pragma warning restore RS0030 // Do not use banned APIs
         services.AddSingleton<CaDatabaseStore>();
         services.AddSingleton<ICaDescriptionSource>(provider => provider.GetRequiredService<CaDatabaseStore>());
         services.AddSingleton<ICaDatabaseUpdater>(

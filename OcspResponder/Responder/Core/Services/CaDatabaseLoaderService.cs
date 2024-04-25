@@ -13,15 +13,20 @@ internal sealed class CaDatabaseLoaderService : IHostedService, IDisposable
 {
     private readonly ICaDatabaseLoader _loader;
     private readonly IOptionsMonitor<CaDatabaseLoaderOptions> _options;
-    private readonly Timer _timer;
+    private readonly ITimer _timer;
     private readonly TaskCompletionSource<bool> _tcs = new();
     private TimeSpan _currentInterval;
 
-    public CaDatabaseLoaderService(ICaDatabaseLoader loader, IOptionsMonitor<CaDatabaseLoaderOptions> options)
+    public CaDatabaseLoaderService(ICaDatabaseLoader loader, IOptionsMonitor<CaDatabaseLoaderOptions> options, TimeProvider timeProvider)
     {
+        if (timeProvider is null)
+        {
+            throw new ArgumentNullException(nameof(timeProvider));
+        }
+
         _loader = loader ?? throw new ArgumentNullException(nameof(loader));
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        _timer = new Timer(Process);
+        _timer = timeProvider.CreateTimer(Process, null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -60,9 +65,7 @@ internal sealed class CaDatabaseLoaderService : IHostedService, IDisposable
             var locked = false;
             try
             {
-#pragma warning disable CA2002 // Do not lock on objects with weak identity -- local object
                 Monitor.TryEnter(_timer, ref locked);
-#pragma warning restore CA2002 // Do not lock on objects with weak identity
                 if (locked)
                 {
                     _timer.Dispose();
@@ -101,9 +104,7 @@ internal sealed class CaDatabaseLoaderService : IHostedService, IDisposable
         var locked = false;
         try
         {
-#pragma warning disable CA2002 // Do not lock on objects with weak identity -- local object
             Monitor.TryEnter(_timer, ref locked);
-#pragma warning restore CA2002 // Do not lock on objects with weak identity
             if (locked)
             {
                 Update();

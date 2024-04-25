@@ -1,1 +1,69 @@
-﻿
+﻿M:System.Threading.Tasks.Task.WaitAll(System.Threading.Tasks.Task[]);Use WhenAll(...).AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAll(System.Threading.Tasks.Task[],System.TimeSpan);Use WhenAll(...).AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAll(System.Threading.Tasks.Task[],System.Int32);Use WhenAll(...).AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAll(System.Threading.Tasks.Task[],System.Int32,System.Threading.CancellationToken);Use WhenAll(...).AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAll(System.Threading.Tasks.Task[],System.Threading.CancellationToken);Use WhenAll(...).AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[]);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.TimeSpan);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32,System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+P:System.DateTime.Now;Use System.TimeProvider.GetLocalNow() instead
+M:System.Random.#ctor();Use overload with specified seed instead
+M:System.IO.StreamWriter.#ctor(System.IO.Stream);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.String);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.IO.Stream,System.Text.Encoding);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.String,System.Boolean);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.String,System.Boolean,System.Text.Encoding);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32,System.Boolean);Use FormattedStreamWriter instead
+M:System.IO.StreamWriter.#ctor(System.String,System.Boolean,System.Text.Encoding,System.Int32);Use FormattedStreamWriter instead
+M:System.Text.StringBuilder.Append(System.Object);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.SByte);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Byte);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Int16);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.UInt16);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Int32);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.UInt32);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Int64);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.UInt64);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Single);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Double);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Append(System.Decimal);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Object);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.SByte);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Byte);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Int16);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.UInt16);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Int32);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.UInt32);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Int64);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.UInt64);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Single);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Double);Use AppendFormat(IFormatProvider,..) instead
+M:System.Text.StringBuilder.Insert(System.Int32,System.Decimal);Use AppendFormat(IFormatProvider,..) instead
+M:System.Delegate.DynamicInvoke(System.Object[]);Use typed delegates instead
+P:System.Collections.Concurrent.ConcurrentDictionary`2.Count;Use Interlocked counting instead, since this property is very slow
+P:System.Collections.Concurrent.ConcurrentDictionary`2.IsEmpty;Use Interlocked counting instead, since this property is very slow
+P:System.Collections.Concurrent.ConcurrentDictionary`2.Keys;Use dictionary pair enumeration instead, since this property is very slow
+P:System.Collections.Concurrent.ConcurrentDictionary`2.Values;Use dictionary pair enumeration instead, since this property is very slow
+M:System.Collections.Concurrent.ConcurrentDictionary`2.ToArray();Use dictionary pair enumeration instead, since this method is very slow
+M:Newtonsoft.Json.JsonSerializer.#ctor();Use JsonSerializer.CreateDefault() or JsonSerializer.Create(JsonSerializerSettings) instead
+T:System.ComponentModel.Composition.ExportAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.ExportMetadataAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.ImportAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.ImportManyAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.ImportMetadataConstraintAttribut; Use types from System.Composition instead
+T:System.ComponentModel.Composition.ImportingConstructorAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.MetadataAttributeAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.OnImportsSatisfiedAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.PartMetadataAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.PartNotDiscoverableAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.SharedAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.SharingBoundaryAttribute; Use types from System.Composition instead
+T:System.ComponentModel.Composition.Convention.AttributedModelProvider; Use types from System.Composition instead
+T:System.Threading.Timer; Use System.TimeProvider.CreateTimer instead
+T:System.Timers.Timer; Use System.TimeProvider.CreateTimer instead
+P:System.TimeProvider.System; Use injected TimeProvider instead
+M:System.DateTimeOffset.#ctor(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
+M:System.DateTimeOffset.op_Implicit(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors

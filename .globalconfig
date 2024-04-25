@@ -44,6 +44,7 @@ dotnet_style_prefer_inferred_anonymous_type_member_names = true:warning
 dotnet_style_prefer_inferred_tuple_names = true:warning
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
 dotnet_style_prefer_simplified_interpolation = true:warning
+dotnet_style_prefer_foreach_explicit_cast_in_source = when_strongly_typed:warning
 
 # Namespace rules
 dotnet_style_namespace_match_folder = true:suggestion
@@ -70,6 +71,8 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:warning
 csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_pattern_matching = true:suggestion
 csharp_style_prefer_not_pattern = true:warning
+csharp_style_prefer_null_check_over_type_check = true:warning
+csharp_style_prefer_extended_property_pattern = true:warning
 
 # Null-checking preferences
 csharp_style_conditional_delegate_call = true:warning
@@ -81,6 +84,7 @@ csharp_preferred_modifier_order = public,private,protected,internal,static,exter
 # Code-block preferences
 csharp_prefer_braces = true:warning
 csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_prefer_method_group_conversion = true:suggestion
 
 # Expression-level preferences
 csharp_style_unused_value_assignment_preference = discard_variable:warning
@@ -94,9 +98,17 @@ csharp_style_prefer_range_operator = true:suggestion
 csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
 csharp_style_throw_expression = true:warning
 csharp_style_unused_value_expression_statement_preference = discard_variable:none
+csharp_style_prefer_utf8_string_literals = true:warning
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:warning
+
+# Member preferences
+csharp_style_prefer_readonly_struct_member = true:warning
+
+# Type preferences
+csharp_style_prefer_readonly_struct = true:warning
+csharp_style_prefer_primary_constructors = false:suggestion
 
 # Namespace options
 csharp_style_namespace_declarations = file_scoped:suggestion
@@ -228,7 +240,7 @@ dotnet_naming_symbols.all_members.applicable_kinds = *
 
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-# CA
+## CA
 # Default severity for analyzer diagnostics
 dotnet_analyzer_diagnostic.severity = warning
 dotnet_analyzer_diagnostic.category-Style.severity = default
@@ -236,14 +248,10 @@ dotnet_analyzer_diagnostic.category-Style.severity = default
 # Default analyzed API surface
 dotnet_code_quality.api_surface = all
 
-# Tune severity
+## Tune severity
+# For conflicting same-quality implementations, preferred order is CA->IDE->SA, except for unnecessary code rules where it's IDE->CA->SA
 # C# warnings that should really be errors
 dotnet_diagnostic.CS8509.severity = error
-
-# Dispose rules (CA2000 and CA2213) ported to IDE analyzers. We already execute the CA rules, so disable the IDE ones.
-dotnet_diagnostic.IDE0067.severity = none
-dotnet_diagnostic.IDE0068.severity = none
-dotnet_diagnostic.IDE0069.severity = none
 
 # Correctness IDE rules
 dotnet_diagnostic.IDE0010.severity = suggestion
@@ -263,11 +271,17 @@ dotnet_diagnostic.IDE0076.severity = warning
 dotnet_diagnostic.IDE0077.severity = warning
 dotnet_diagnostic.IDE0100.severity = warning
 dotnet_diagnostic.IDE0110.severity = warning
+dotnet_diagnostic.IDE0240.severity = warning
+dotnet_diagnostic.IDE0241.severity = warning
+dotnet_diagnostic.IDE0280.severity = warning
+
+# Code quality IDE rules
+dotnet_diagnostic.IDE0079.severity = warning
 
 # FxCop rules
 dotnet_diagnostic.CA1000.severity = none
-dotnet_diagnostic.CA1002.severity = warning
-dotnet_code_quality.ca1002.api_surface = public, internal
+dotnet_diagnostic.CA1002.severity = suggestion
+dotnet_code_quality.CA1002.api_surface = public, internal
 dotnet_diagnostic.CA1003.severity = suggestion
 dotnet_diagnostic.CA1008.severity = warning
 dotnet_diagnostic.CA1012.severity = warning
@@ -289,10 +303,12 @@ dotnet_diagnostic.CA1056.severity = warning
 dotnet_diagnostic.CA1058.severity = warning
 dotnet_diagnostic.CA1060.severity = warning
 dotnet_diagnostic.CA1062.severity = suggestion
-dotnet_diagnostic.CA1063.severity = warning
+dotnet_code_quality.CA1062.exclude_extension_method_this_parameter = true
+dotnet_code_quality.CA1062.api_surface = public, internal
+dotnet_diagnostic.CA1063.severity = none # We don't use the standard Dispose pattern because of SRP violation
 dotnet_diagnostic.CA1065.severity = suggestion
 dotnet_diagnostic.CA1066.severity = warning
-dotnet_diagnostic.CA1307.severity = suggestion
+dotnet_diagnostic.CA1307.severity = none
 dotnet_diagnostic.CA1308.severity = warning
 dotnet_diagnostic.CA1501.severity = warning
 dotnet_diagnostic.CA1502.severity = warning
@@ -300,6 +316,7 @@ dotnet_diagnostic.CA1505.severity = warning
 dotnet_diagnostic.CA1506.severity = warning
 dotnet_diagnostic.CA1508.severity = warning
 dotnet_diagnostic.CA1509.severity = warning
+dotnet_diagnostic.CA1510.severity = none
 dotnet_diagnostic.CA1700.severity = warning
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1710.severity = none
@@ -319,10 +336,12 @@ dotnet_diagnostic.CA1814.severity = warning
 dotnet_diagnostic.CA1815.severity = warning
 dotnet_diagnostic.CA1819.severity = warning
 dotnet_diagnostic.CA1820.severity = warning
-dotnet_diagnostic.CA1823.severity = warning
+dotnet_diagnostic.CA1823.severity = none # Superseded by IDE0052
 dotnet_diagnostic.CA1836.severity = suggestion
 dotnet_diagnostic.CA1845.severity = suggestion
 dotnet_diagnostic.CA1849.severity = warning
+dotnet_diagnostic.CA1852.severity = warning
+dotnet_code_quality.CA1852.ignore_internalsvisibleto = true
 dotnet_diagnostic.CA2000.severity = warning
 dotnet_diagnostic.CA2002.severity = warning
 dotnet_diagnostic.CA2007.severity = warning
@@ -411,13 +430,16 @@ dotnet_diagnostic.CA5405.severity = warning
 # StyleCop rules
 dotnet_diagnostic.SA0001.severity = none
 dotnet_diagnostic.SA1011.severity = none
+dotnet_diagnostic.SA1012.severity = none # Superseded by IDE0055
 dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1109.severity = none
 dotnet_diagnostic.SA1122.severity = none
+dotnet_diagnostic.SA1142.severity = none # Superseded by IDE0033
 dotnet_diagnostic.SA1200.severity = none
 dotnet_diagnostic.SA1302.severity = none
 dotnet_diagnostic.SA1309.severity = none
 dotnet_diagnostic.SA1313.severity = warning
+dotnet_diagnostic.SA1401.severity = none # Superseded by CA1051
 dotnet_diagnostic.SA1404.severity = suggestion
 dotnet_diagnostic.SA1408.severity = suggestion
 dotnet_diagnostic.SA1412.severity = warning
@@ -449,7 +471,15 @@ dotnet_diagnostic.SX1309.severity = warning
 # xUnit rules
 dotnet_diagnostic.xUnit1000.severity = error
 dotnet_diagnostic.xUnit1004.severity = none
+dotnet_diagnostic.xUnit1019.severity = error
 dotnet_diagnostic.xUnit1026.severity = suggestion
+dotnet_diagnostic.xUnit1042.severity = suggestion
 
 # Roslyn rules
 dotnet_diagnostic.RS2008.severity = none
+
+# ErrorProne.NET rules
+dotnet_diagnostic.EPC14.severity = none # Using CA2007 instead of this, because of https://github.com/SergeyTeplyakov/ErrorProne.NET/issues/280
+dotnet_diagnostic.EPC15.severity = none # Using CA2007 instead of this, because of https://github.com/SergeyTeplyakov/ErrorProne.NET/issues/280
+dotnet_diagnostic.ERP022.severity = none # We rely on other CA rules for that
+dotnet_diagnostic.EPS09.severity = none # Not used because of https://github.com/SergeyTeplyakov/ErrorProne.NET/issues/279
