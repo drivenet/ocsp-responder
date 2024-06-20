@@ -1,0 +1,11 @@
+﻿<Project>
+  <Import Project="Minimal.props" />
+  <Import Project="DnetCompat.props" />
+
+  <ItemGroup Label="DefaultAnalyzerFiles">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\BannedSymbols.Default.txt">
+      <Link>BannedSymbols.Default.Dnet.Shared.txt</Link>
+      <Visible>false</Visible>
+    </AdditionalFiles>
+  </ItemGroup>
+</Project>

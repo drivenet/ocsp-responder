@@ -1,0 +1,16 @@
+﻿P:System.Reflection.Assembly.ExportedTypes;Use SafeGetExportedTypes() instead
+M:System.Reflection.Assembly.GetExportedTypes();Use SafeGetExportedTypes() instead
+M:System.IO.MemoryStream.ToArray();Use MemoryStream.GetBuffer() instead, unless a strict-sized array is required
+M:System.Diagnostics.Stopwatch.GetTimestamp();Use System.TimeProvider.GetTimestamp() instead, unless performance-constrained
+P:MongoDB.Driver.WriteConcern.Unacknowledged;Use other write concern instead
+P:MongoDB.Driver.WriteConcern.Acknowledged;Consider using WMajority write concern instead
+P:MongoDB.Driver.WriteConcern.W1;Use WMajority write concern instead
+P:MongoDB.Driver.WriteConcern.W2;Use WMajority write concern instead
+P:MongoDB.Driver.WriteConcern.W3;Use WMajority write concern instead
+P:MongoDB.Driver.ReadPreference.Primary;Use PrimaryPreferred read preference instead
+P:MongoDB.Driver.ReadPreference.Secondary;Use Nearest or SecondaryPreferred read preference instead
+P:MongoDB.Driver.ReadPreference.SecondaryPreferred;Consider using Nearest read preference instead
+M:Newtonsoft.Json.JsonSerializer.Create();Use JsonSerializer.CreateDefault() or JsonSerializer.Create(JsonSerializerSettings) instead
+M:Newtonsoft.Json.JsonSerializer.Create(Newtonsoft.Json.JsonSerializerSettings);Consider using JsonSerializer.CreateDefault() instead
+P:System.DateTime.UtcNow;Use System.TimeProvider.GetUtcNow() instead
+P:System.TimeProvider.System; Use injected TimeProvider instead

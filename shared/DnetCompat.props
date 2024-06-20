@@ -1,0 +1,25 @@
+﻿<Project>
+  <PropertyGroup Label="PathDefaults">
+    <DnetLibPath Condition="'$(DnetLibPath)' == ''">$(MSBuildThisFileDirectory)\..</DnetLibPath>
+  </PropertyGroup>
+
+  <ItemGroup Label="DefaultDesignerItems">
+    <Compile Update="**/*.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon Condition="Exists('%(RelativeDir)$([System.IO.Path]::GetFileNameWithoutExtension(%(Filename))).resx')">$([System.IO.Path]::GetFileNameWithoutExtension(%(Filename))).resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="**/*.resx">
+      <Generator Condition="Exists('%(RelativeDir)%(Filename).Designer.cs')">ResXFileCodeGenerator</Generator>
+      <LastGenOutput Condition="Exists('%(RelativeDir)%(Filename).Designer.cs')">%(Filename).Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="**/*.??.resx">
+      <DependentUpon Condition="Exists('%(RelativeDir)$([System.IO.Path]::GetFileNameWithoutExtension(%(Filename))).resx')">$([System.IO.Path]::GetFileNameWithoutExtension(%(Filename))).resx</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="FeaturesCompatReferences">
+    <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="All" />
+    <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

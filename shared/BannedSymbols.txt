@@ -10,14 +10,6 @@ M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
 P:System.DateTime.Now;Use System.TimeProvider.GetLocalNow() instead
 M:System.Random.#ctor();Use overload with specified seed instead
-M:System.IO.StreamWriter.#ctor(System.IO.Stream);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.String);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.IO.Stream,System.Text.Encoding);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.String,System.Boolean);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.String,System.Boolean,System.Text.Encoding);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32,System.Boolean);Use FormattedStreamWriter instead
-M:System.IO.StreamWriter.#ctor(System.String,System.Boolean,System.Text.Encoding,System.Int32);Use FormattedStreamWriter instead
 M:System.Text.StringBuilder.Append(System.Object);Use AppendFormat(IFormatProvider,..) instead
 M:System.Text.StringBuilder.Append(System.SByte);Use AppendFormat(IFormatProvider,..) instead
 M:System.Text.StringBuilder.Append(System.Byte);Use AppendFormat(IFormatProvider,..) instead
@@ -64,6 +56,6 @@ T:System.ComponentModel.Composition.SharingBoundaryAttribute; Use types from Sys
 T:System.ComponentModel.Composition.Convention.AttributedModelProvider; Use types from System.Composition instead
 T:System.Threading.Timer; Use System.TimeProvider.CreateTimer instead
 T:System.Timers.Timer; Use System.TimeProvider.CreateTimer instead
-P:System.TimeProvider.System; Use injected TimeProvider instead
 M:System.DateTimeOffset.#ctor(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
 M:System.DateTimeOffset.op_Implicit(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
+T:System.Threading.LazyInitializer;Use System.Lazy<> instead, LazyInitializer is NRT-unfriendly for old netstandard
