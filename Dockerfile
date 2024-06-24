@@ -17,4 +17,4 @@ COPY --from=build /app .
 COPY /db db
 
 EXPOSE 80
-ENTRYPOINT ./ocsp-responder
+ENTRYPOINT ./ocsp-responder --http_ports 80
