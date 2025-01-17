@@ -10,6 +10,7 @@
     <NoWarn>$(NoWarn);CA1848</NoWarn>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
     <ServerGarbageCollection>false</ServerGarbageCollection>
+    <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
   </PropertyGroup>
 
   <ItemGroup>

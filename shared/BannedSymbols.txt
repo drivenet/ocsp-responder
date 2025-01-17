@@ -8,6 +8,32 @@ M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.TimeS
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32,System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+M:System.Threading.Thread.VolatileRead(System.Object@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.SByte@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.Byte@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.Int16@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.UInt16@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.Int32@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.UInt32@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.Int64@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.UInt64@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.Single@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.Double@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.IntPtr@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileRead(System.UIntPtr@);Use Volatile.Read instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Object@,System.Object);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.SByte@,System.SByte);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Byte@,System.Byte);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Int16@,System.Int16);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.UInt16@,System.UInt16);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Int32@,System.Int32);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.UInt32@,System.UInt32);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Int64@,System.Int64);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.UInt64@,System.UInt64);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Single@,System.Single);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.Double@,System.Double);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.IntPtr@,System.IntPtr);Use Volatile.Write instead, this method is considered legacy
+M:System.Threading.Thread.VolatileWrite(System.UIntPtr@,System.UIntPtr);Use Volatile.Write instead, this method is considered legacy
 P:System.DateTime.Now;Use System.TimeProvider.GetLocalNow() instead
 M:System.Random.#ctor();Use overload with specified seed instead
 M:System.Text.StringBuilder.Append(System.Object);Use AppendFormat(IFormatProvider,..) instead
@@ -59,3 +85,10 @@ T:System.Timers.Timer; Use System.TimeProvider.CreateTimer instead
 M:System.DateTimeOffset.#ctor(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
 M:System.DateTimeOffset.op_Implicit(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
 T:System.Threading.LazyInitializer;Use System.Lazy<> instead, LazyInitializer is NRT-unfriendly for old netstandard
+F:System.Security.Cryptography.X509Certificates.X509RevocationMode.Offline;Use Online revocation check instead, Offline uses only cached revocation information
+M:System.Diagnostics.Debug.Assert(System.Boolean);Do not use Debug.Assert since it may not do what you're expecting; plain "if + throw" works better
+M:System.Diagnostics.Debug.Assert(System.Boolean,System.String);Do not use Debug.Assert since it may not do what you're expecting; plain "if + throw" works better
+M:System.Diagnostics.Debug.Assert(System.Boolean,System.String,System.String);Do not use Debug.Assert since it may not do what you're expecting; plain "if + throw" works better
+M:System.Diagnostics.Debug.Assert(System.Boolean,System.String,System.String,System.Object[]);Do not use Debug.Assert since it may not do what you're expecting; plain "if + throw" works better
+M:System.Diagnostics.Debug.Assert(System.Boolean,System.Diagnostics.Debug.AssertInterpolatedStringHandler);Do not use Debug.Assert since it may not do what you're expecting; plain "if + throw" works better
+M:System.Diagnostics.Debug.Assert(System.Boolean,System.Diagnostics.Debug.AssertInterpolatedStringHandler,System.Diagnostics.Debug.AssertInterpolatedStringHandler);Do not use Debug.Assert since it may not do what you're expecting; plain "if + throw" works better

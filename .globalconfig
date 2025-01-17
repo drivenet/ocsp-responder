@@ -231,6 +231,16 @@ dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, p
 dotnet_naming_style.begins_with_i.required_prefix = I
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
+# Type parameters must be PascalCase and begin with "T"
+dotnet_naming_rule.type_parameters_should_be_pascal_case_prefixed_with_t.severity = warning
+dotnet_naming_rule.type_parameters_should_be_pascal_case_prefixed_with_t.symbols = type_parameters
+dotnet_naming_rule.type_parameters_should_be_pascal_case_prefixed_with_t.style = begins_with_t
+
+dotnet_naming_style.begins_with_t.required_prefix = T
+dotnet_naming_style.begins_with_t.capitalization = pascal_case
+
+dotnet_naming_symbols.type_parameters.applicable_kinds = type_parameter
+
 # By default, name items with PascalCase
 dotnet_naming_rule.members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.members_should_be_pascal_case.symbols = all_members
@@ -247,6 +257,9 @@ dotnet_analyzer_diagnostic.category-Style.severity = default
 
 # Default analyzed API surface
 dotnet_code_quality.api_surface = all
+
+# ReSharper compatibility
+dotnet_remove_unnecessary_suppression_exclusions = category:ReSharper
 
 ## Tune severity
 # For conflicting same-quality implementations, preferred order is CA->IDE->SA, except for unnecessary code rules where it's IDE->CA->SA
@@ -309,6 +322,7 @@ dotnet_diagnostic.CA1065.severity = suggestion
 dotnet_diagnostic.CA1066.severity = warning
 dotnet_diagnostic.CA1307.severity = none
 dotnet_diagnostic.CA1308.severity = warning
+dotnet_diagnostic.CA1309.severity = suggestion
 dotnet_diagnostic.CA1501.severity = warning
 dotnet_diagnostic.CA1502.severity = warning
 dotnet_diagnostic.CA1505.severity = warning
@@ -343,6 +357,7 @@ dotnet_diagnostic.CA1852.severity = warning
 dotnet_code_quality.CA1852.ignore_internalsvisibleto = true
 dotnet_diagnostic.CA1859.severity = suggestion
 dotnet_diagnostic.CA2000.severity = warning
+dotnet_code_quality.CA2000.excluded_type_names_with_derived_types = T:Dnet.Testing.Composition.CompositionContextBase
 dotnet_diagnostic.CA2002.severity = warning
 dotnet_diagnostic.CA2007.severity = warning
 dotnet_diagnostic.CA2008.severity = warning
@@ -473,6 +488,7 @@ dotnet_diagnostic.xUnit1000.severity = error
 dotnet_diagnostic.xUnit1004.severity = none
 dotnet_diagnostic.xUnit1019.severity = error
 dotnet_diagnostic.xUnit1026.severity = suggestion
+dotnet_diagnostic.xUnit1037.severity = none
 dotnet_diagnostic.xUnit1042.severity = suggestion
 
 # Roslyn rules
