@@ -1,10 +1,11 @@
 # Shared
 .idea/
+**/.DS_Store
 
 # .NET
 .vs/
 *.suo
-*.csproj.user
+*.user
 obj/
 bin/
 packages/
