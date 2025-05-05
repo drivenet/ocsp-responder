@@ -16,11 +16,13 @@ internal sealed class OcspResponderRepository : IOcspResponderRepository
 {
     private readonly ICaDescriptionSource _caDescriptions;
     private readonly IOptionsMonitor<OcspResponderOptions> _options;
+    private readonly TimeProvider _timeProvider;
 
-    public OcspResponderRepository(ICaDescriptionSource caDescriptions, IOptionsMonitor<OcspResponderOptions> options)
+    public OcspResponderRepository(ICaDescriptionSource caDescriptions, IOptionsMonitor<OcspResponderOptions> options, TimeProvider timeProvider)
     {
         _caDescriptions = caDescriptions ?? throw new ArgumentNullException(nameof(caDescriptions));
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     public void Dispose()
@@ -35,7 +37,7 @@ internal sealed class OcspResponderRepository : IOcspResponderRepository
 
     public Task<IEnumerable<X509Certificate2>> GetIssuerCertificates() => Task.FromResult(_caDescriptions.CaCertificates);
 
-    public Task<DateTimeOffset> GetNextUpdate() => Task.FromResult(DateTimeOffset.UtcNow + _options.CurrentValue.NextUpdateInterval);
+    public Task<DateTimeOffset> GetNextUpdate() => Task.FromResult(_timeProvider.GetUtcNow() + _options.CurrentValue.NextUpdateInterval);
 
     public Task<AsymmetricAlgorithm> GetResponderPrivateKey(X509Certificate2 caCertificate)
     {

@@ -10,18 +10,20 @@ internal sealed class CaDatabaseLoader : ICaDatabaseLoader
     private readonly ICaDatabaseUpdater _updater;
     private readonly CaDescriptionLoader _loader;
     private readonly CaDatabasePathsSource _fileSource;
+    private readonly TimeProvider _timeProvider;
 
-    public CaDatabaseLoader(ICaDatabaseUpdater updater, CaDescriptionLoader loader, CaDatabasePathsSource fileSource)
+    public CaDatabaseLoader(ICaDatabaseUpdater updater, CaDescriptionLoader loader, CaDatabasePathsSource fileSource, TimeProvider timeProvider)
     {
         _updater = updater ?? throw new ArgumentNullException(nameof(updater));
         _loader = loader ?? throw new ArgumentNullException(nameof(loader));
         _fileSource = fileSource ?? throw new ArgumentNullException(nameof(fileSource));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     public void Load()
     {
         var paths = _fileSource.GetPaths();
-        var now = DateTimeOffset.UtcNow;
+        var now = _timeProvider.GetUtcNow();
         var descriptions = paths
             .Select(path => _loader.Load(path, now))
             .ToList();

@@ -10,6 +10,7 @@ P:MongoDB.Driver.ReadPreference.SecondaryPreferred;Consider using Nearest read p
 M:Newtonsoft.Json.JsonSerializer.Create();Use JsonSerializer.CreateDefault() or JsonSerializer.Create(JsonSerializerSettings) instead
 M:Newtonsoft.Json.JsonSerializer.Create(Newtonsoft.Json.JsonSerializerSettings);Consider using JsonSerializer.CreateDefault() instead
 P:System.DateTime.UtcNow;Use System.TimeProvider.GetUtcNow() instead
+P:System.DateTimeOffset.UtcNow;Use System.TimeProvider.GetUtcNow() instead
 P:System.TimeProvider.System;Use injected TimeProvider instead
 P:System.Diagnostics.Stopwatch.Elapsed;Use System.TimeProvider.GetElapsedTime() instead, unless performance-constrained, since Stopwatch isn't testable
 P:System.Diagnostics.Stopwatch.ElapsedMilliseconds;Use System.TimeProvider.GetElapsedTime() instead, unless performance-constrained, since Stopwatch isn't testable
