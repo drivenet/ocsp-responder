@@ -6,7 +6,7 @@
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <AssemblyName>ocsp-responder</AssemblyName>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <NoWarn>$(NoWarn);CA1848</NoWarn>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
     <ServerGarbageCollection>false</ServerGarbageCollection>
