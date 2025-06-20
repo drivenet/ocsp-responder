@@ -4,12 +4,12 @@ P:MongoDB.Driver.WriteConcern.Unacknowledged;Use W1 write concern instead
 P:MongoDB.Driver.WriteConcern.Acknowledged;Consider using WMajority or W1 write concerns instead
 P:MongoDB.Driver.WriteConcern.W2;Use WMajority write concern instead
 P:MongoDB.Driver.WriteConcern.W3;Use WMajority write concern instead
-P:MongoDB.Driver.ReadPreference.Primary;Use PrimaryPreferred read preference instead
-P:MongoDB.Driver.ReadPreference.Secondary;Use Nearest or SecondaryPreferred read preference instead
-P:MongoDB.Driver.ReadPreference.SecondaryPreferred;Consider using Nearest read preference instead
+P:MongoDB.Driver.ReadPreference.Primary;Use PrimaryPreferred read preference instead, since primary-only is too strict, unless specified by default
+P:MongoDB.Driver.ReadPreference.Secondary;Use Nearest (recommended) or SecondaryPreferred read preference instead, since secondary-only is too strict
+P:MongoDB.Driver.ReadPreference.SecondaryPreferred;Prefer using Nearest read preference instead, since SecondaryPreferred may introduce unwanted load shift after failover
 M:Newtonsoft.Json.JsonSerializer.Create();Use JsonSerializer.CreateDefault() or JsonSerializer.Create(JsonSerializerSettings) instead
 M:Newtonsoft.Json.JsonSerializer.Create(Newtonsoft.Json.JsonSerializerSettings);Consider using JsonSerializer.CreateDefault() instead
-P:System.DateTime.UtcNow;Use System.TimeProvider.GetUtcNow() instead
+P:System.DateTime.UtcNow;Use System.TimeProvider.GetUtcNow()/GetUtcDateTime() instead
 P:System.DateTimeOffset.UtcNow;Use System.TimeProvider.GetUtcNow() instead
 P:System.TimeProvider.System;Use injected TimeProvider instead
 P:System.Diagnostics.Stopwatch.Elapsed;Use System.TimeProvider.GetElapsedTime() instead, unless performance-constrained, since Stopwatch isn't testable

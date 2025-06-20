@@ -8,6 +8,7 @@ M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.TimeS
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Int32,System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
 M:System.Threading.Tasks.Task.WaitAny(System.Threading.Tasks.Task[],System.Threading.CancellationToken);Use WhenAny(...).AwaitUncaptured().AwaitUncaptured() instead
+P:System.OperationCanceledException.CancellationToken;Check the passed CancellationToken.IsCancellationRequest instead, since exception-contained token can be a different one
 M:System.Threading.Thread.VolatileRead(System.Object@);Use Volatile.Read instead, this method is considered legacy
 M:System.Threading.Thread.VolatileRead(System.SByte@);Use Volatile.Read instead, this method is considered legacy
 M:System.Threading.Thread.VolatileRead(System.Byte@);Use Volatile.Read instead, this method is considered legacy
@@ -34,7 +35,7 @@ M:System.Threading.Thread.VolatileWrite(System.Single@,System.Single);Use Volati
 M:System.Threading.Thread.VolatileWrite(System.Double@,System.Double);Use Volatile.Write instead, this method is considered legacy
 M:System.Threading.Thread.VolatileWrite(System.IntPtr@,System.IntPtr);Use Volatile.Write instead, this method is considered legacy
 M:System.Threading.Thread.VolatileWrite(System.UIntPtr@,System.UIntPtr);Use Volatile.Write instead, this method is considered legacy
-P:System.DateTime.Now;Use System.TimeProvider.GetLocalNow() instead
+P:System.DateTime.Now;Use System.TimeProvider.GetLocalNow()/GetLocalDateTime() instead
 P:System.DateTimeOffset.Now;Use System.TimeProvider.GetLocalNow() instead
 M:System.Random.#ctor();Use overload with specified seed instead
 M:System.Text.StringBuilder.Append(System.Object);Use AppendFormat(IFormatProvider,..) instead
