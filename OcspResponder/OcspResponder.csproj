@@ -6,7 +6,7 @@
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <AssemblyName>ocsp-responder</AssemblyName>
-    <Version>1.2.2</Version>
+    <Version>1.2.3</Version>
     <NoWarn>$(NoWarn);CA1848</NoWarn>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
     <ServerGarbageCollection>false</ServerGarbageCollection>
@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="OcspResponder.AspNetCore" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.1" Condition="$(MinimalBuild) != true" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
