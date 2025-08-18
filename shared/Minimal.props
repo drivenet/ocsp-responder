@@ -8,7 +8,6 @@
     <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
     <ApplicationTargetFramework>net8.0</ApplicationTargetFramework>
     <GeneratorTargetFramework>net472</GeneratorTargetFramework>
-    <BeforeTargetFrameworkInferenceTargets>$(DnetSharedPath)/Runtime.targets</BeforeTargetFrameworkInferenceTargets> <!-- $(DnetSharedPath)/ prefix added to prevent build fail -->
   </PropertyGroup>
 
   <PropertyGroup Label="MinimalProjectSettings">
@@ -22,6 +21,7 @@
     <DebugType>embedded</DebugType>
     <Deterministic>true</Deterministic>
     <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AnalysisLevel>latest</AnalysisLevel>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
@@ -33,6 +33,7 @@
     <Features>strict</Features>
     <OptionalWarnings>CS1572;CS1573;CS1574;CS1711;CS1712;CS1734;CS1735;CA1513;SA1107;SA1116;SA1117;SA1201;SA1202;SA1203;SA1214;SA1402;SYSLIB1045</OptionalWarnings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <BeforeTargetFrameworkInferenceTargets>$(MSBuildThisFileDirectory)\Runtime.targets</BeforeTargetFrameworkInferenceTargets>
   </PropertyGroup>
 
   <PropertyGroup Label="DevelopmentProjectSettings" Condition="'$(Configuration)' != 'Integration'">
@@ -47,11 +48,6 @@
   <PropertyGroup Label="IntegrationProjectSettings" Condition="'$(Configuration)' == 'Integration'">
     <Optimize>true</Optimize>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>
-
-  <PropertyGroup Label="ExeOutputSettings" Condition="'$(OutputType)' == 'Exe'">
-    <PublishDocumentationFiles>false</PublishDocumentationFiles>
-    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">

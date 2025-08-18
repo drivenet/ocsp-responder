@@ -88,7 +88,7 @@ T:System.Threading.Timer;Use System.TimeProvider.CreateTimer instead
 T:System.Timers.Timer;Use System.TimeProvider.CreateTimer instead
 M:System.DateTimeOffset.#ctor(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
 M:System.DateTimeOffset.op_Implicit(System.DateTime);Use DateTimeOffset constructor with a specified offset, checking the DateTime.Kind, since this constructor is very prone to timezone errors
-P:System.DateTimeOffset.DateTime;Prefer using DateTimeOffset directly or create instances of DateTime with TimeProvder.GetUtcDateTime/GetLocalDateTime, use this property only if TZ-specific calendar date is required
+P:System.DateTimeOffset.DateTime;Prefer using DateTimeOffset directly or create instances of DateTime with TimeProvider.GetUtcDateTime/GetLocalDateTime, use this property only if TZ-specific calendar date is required
 T:System.Threading.LazyInitializer;Use System.Lazy<> instead, LazyInitializer is NRT-unfriendly for old netstandard
 F:System.Security.Cryptography.X509Certificates.X509RevocationMode.Offline;Use Online revocation check instead, Offline uses only cached revocation information
 M:System.Diagnostics.Debug.Assert(System.Boolean);Do not use Debug.Assert since it may not do what you're expecting;plain "if + throw" works better
