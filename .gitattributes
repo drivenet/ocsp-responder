@@ -97,7 +97,7 @@ Dockerfile text
 *.props text
 *.targets text
 *.cshtml text diff=html
-*.sln text eol=crlf merge=union
+*.sln text merge=union
 *.csproj text merge=union
 
 *.tf text
@@ -113,6 +113,9 @@ package-lock.json text -diff
 
 *.exe binary
 *.dll binary
+*.pdb binary
+*.so binary
+*.dylib binary
 *.pyc binary
 
 *.bmp binary

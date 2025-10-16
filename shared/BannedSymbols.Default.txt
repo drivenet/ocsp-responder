@@ -7,6 +7,8 @@ P:MongoDB.Driver.WriteConcern.W3;Use WMajority write concern instead
 P:MongoDB.Driver.ReadPreference.Primary;Use PrimaryPreferred read preference instead, since primary-only is too strict, unless specified by default
 P:MongoDB.Driver.ReadPreference.Secondary;Use Nearest (recommended) or SecondaryPreferred read preference instead, since secondary-only is too strict
 P:MongoDB.Driver.ReadPreference.SecondaryPreferred;Prefer using Nearest read preference instead, since SecondaryPreferred may introduce unwanted load shift after failover
+M:MongoDB.Bson.Serialization.BsonClassMap.SetIsRootClass(System.Boolean);Usually it is not needed, unless there is a partially-registered polymorphic hierarchy
+M:MongoDB.Bson.Serialization.BsonClassMap.AddKnownType(System.Type);Usually it is not needed, unless there is a partially-registered polymorphic hierarchy with multiple projections
 M:Newtonsoft.Json.JsonSerializer.Create();Use JsonSerializer.CreateDefault() or JsonSerializer.Create(JsonSerializerSettings) instead
 M:Newtonsoft.Json.JsonSerializer.Create(Newtonsoft.Json.JsonSerializerSettings);Consider using JsonSerializer.CreateDefault() instead
 P:System.DateTime.UtcNow;Use System.TimeProvider.GetUtcNow()/GetUtcDateTime() instead
@@ -15,3 +17,5 @@ P:System.TimeProvider.System;Use injected TimeProvider instead
 P:System.Diagnostics.Stopwatch.Elapsed;Use System.TimeProvider.GetElapsedTime() instead, unless performance-constrained, since Stopwatch isn't testable
 P:System.Diagnostics.Stopwatch.ElapsedMilliseconds;Use System.TimeProvider.GetElapsedTime() instead, unless performance-constrained, since Stopwatch isn't testable
 P:System.Diagnostics.Stopwatch.ElapsedTicks;Use System.TimeProvider.GetElapsedTime() instead, unless performance-constrained, since Stopwatch isn't testable
+P:Nest.QueryBase.Name;Query names should not be used in production code as they are primarily for debugging purposes and impact performance
+P:Nest.SearchRequest.TrackScores;Tracking scores is only needed when not ordering by the `_score`, otherwise they just impact performance
