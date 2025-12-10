@@ -457,7 +457,6 @@ dotnet_diagnostic.SA1313.severity = warning
 dotnet_diagnostic.SA1401.severity = none # Superseded by CA1051
 dotnet_diagnostic.SA1404.severity = suggestion
 dotnet_diagnostic.SA1408.severity = suggestion
-dotnet_diagnostic.SA1412.severity = warning
 dotnet_diagnostic.SA1600.severity = none
 dotnet_diagnostic.SA1601.severity = none
 dotnet_diagnostic.SA1602.severity = none
