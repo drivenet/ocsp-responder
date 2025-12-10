@@ -24,7 +24,7 @@ internal sealed class LoggingOcspResponderEx : IOcspResponderEx
         var requestContentString = httpRequest.Content is { Length: < 768 } requestContent
             ? Convert.ToBase64String(requestContent)
             : null;
-        _logger.LogInformation(EventIds.Request, "OCSP request {Method} {Uri} from {RemoteIP}, length: {Length}\n{Content}", httpRequest.HttpMethod, httpRequest.RequestUri, metadata.RemoteIP, httpRequest.Content?.Length, requestContentString);
+        _logger.LogInformation(EventIds.Request, "OCSP request {Method} {Path} from {RemoteIP}, length: {Length}\n{Content}", httpRequest.HttpMethod, httpRequest.LocalPath, metadata.RemoteIP, httpRequest.Content?.Length, requestContentString);
         var response = await _inner.Respond(httpRequest, metadata);
         _logger.LogInformation(EventIds.Response, "OCSP response {Status}, length: {Length}", response.Status, response.Content.Length);
         return response;

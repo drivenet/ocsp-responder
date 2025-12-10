@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 
 using OcspResponder.AspNetCore;
@@ -25,9 +24,6 @@ public sealed class OcspController : Controller
     public async Task<OcspActionResult> Get()
     {
         var ocspHttpRequest = await Request.ToOcspHttpRequest();
-
-        ocspHttpRequest.MediaType ??= "application/ocsp-request";
-        ocspHttpRequest.RequestUri = new Uri(ocspHttpRequest.RequestUri, HttpContext.Features.GetRequiredFeature<IHttpRequestFeature>().RawTarget);
         var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest, CreateMetadata());
         return new(ocspHttpResponse);
     }
