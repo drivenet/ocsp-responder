@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 
 using OcspResponder.AspNetCore;
@@ -18,10 +19,15 @@ public sealed class OcspController : Controller
         _ocspResponder = ocspResponder ?? throw new ArgumentNullException(nameof(ocspResponder));
     }
 
-    [HttpGet]
-    public async Task<OcspActionResult> Get(string encoded)
+#pragma warning disable ASP0018 // Unused route parameter -- the value is parsed by ToOcspHttpRequest
+    [HttpGet("{_}")]
+#pragma warning restore ASP0018 // Unused route parameter
+    public async Task<OcspActionResult> Get()
     {
         var ocspHttpRequest = await Request.ToOcspHttpRequest();
+
+        ocspHttpRequest.MediaType ??= "application/ocsp-request";
+        ocspHttpRequest.RequestUri = new Uri(ocspHttpRequest.RequestUri, HttpContext.Features.GetRequiredFeature<IHttpRequestFeature>().RawTarget);
         var ocspHttpResponse = await _ocspResponder.Respond(ocspHttpRequest, CreateMetadata());
         return new(ocspHttpResponse);
     }
