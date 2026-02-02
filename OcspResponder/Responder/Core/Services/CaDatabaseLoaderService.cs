@@ -14,7 +14,7 @@ internal sealed class CaDatabaseLoaderService : IHostedService, IDisposable
     private readonly ICaDatabaseLoader _loader;
     private readonly IOptionsMonitor<CaDatabaseLoaderOptions> _options;
     private readonly ITimer _timer;
-    private readonly TaskCompletionSource<bool> _tcs = new();
+    private readonly TaskCompletionSource<bool> _tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private TimeSpan _currentInterval;
 
     public CaDatabaseLoaderService(ICaDatabaseLoader loader, IOptionsMonitor<CaDatabaseLoaderOptions> options, TimeProvider timeProvider)
