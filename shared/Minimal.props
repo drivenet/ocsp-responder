@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup Label="TopLevelPathDefaults">
     <DnetSharedPath Condition="'$(DnetSharedPath)' == ''">$(MSBuildThisFileDirectory)</DnetSharedPath>
   </PropertyGroup>

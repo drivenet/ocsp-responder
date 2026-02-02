@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup Label="PathDefaults">
     <DnetLibPath Condition="'$(DnetLibPath)' == ''">$(MSBuildThisFileDirectory)\..</DnetLibPath>
   </PropertyGroup>

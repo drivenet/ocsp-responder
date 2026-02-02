@@ -1,6 +1,7 @@
 root = true
 
 [*]
+charset = utf-8
 indent_size = 4
 indent_style = space
 tab_width = 4
@@ -13,11 +14,10 @@ resharper_string_literal_typo_highlighting = do_not_show
 
 
 [*.{cs,cshtml,as?x}]
-charset = utf-8-bom
 trim_trailing_whitespace = true
 
 
-[*.{xml,csproj,props,build,targets,config,ruleset,nuspec,resx,vsixmanifest,browser}]
+[*.{xml,csproj,props,build,targets,config,ruleset,nuspec,resx,vsixmanifest,browser,wxs,wixproj}]
 indent_size = 2
 
 
@@ -27,40 +27,27 @@ insert_final_newline = false
 
 
 [*.json]
-charset = utf-8
 indent_size = 2
 
 
 [*.md]
-charset = utf-8
 indent_size = 2
 
 
-[*.txt]
-charset = utf-8-bom
-
-
 [*.pp]
-charset = utf-8
 indent_size = 2
 tab_width = 2
 trim_trailing_whitespace = true
 
 
 [*.{tf,tfrc,hcl}]
-charset = utf-8
 indent_size = 2
 trim_trailing_whitespace = true
 
 
 [*.{yaml,yml}]
-charset = utf-8
 indent_size = 2
 trim_trailing_whitespace = true
-
-
-[robots.txt]
-charset = utf-8
 
 
 [*.{css,less}]
@@ -68,6 +55,9 @@ trim_trailing_whitespace = true
 
 
 [*.{js,cjs,ts}]
-charset = utf-8
 indent_size = 2
 trim_trailing_whitespace = true
+
+
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
