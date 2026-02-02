@@ -1,11 +1,11 @@
 ﻿# ocsp-responder
 ## What it is and why it was created?
 This is a simple OCSP responder (see [RFC6960](https://tools.ietf.org/html/rfc6960)) built with ASP.NET Core.
-I needed an OCSP responder for our internal PKI and found a [wonderful library](https://github.com/gabrielcalegari/OCSPResponder) that simplified the development a lot.
+I needed an OCSP responder for our internal PKI and found a [wonderful library](https://github.com/gabrielcalegari/OCSPResponder) that simplified the development a lot, but we had to [fork](https://github.com/gabrielcalegari/OCSPResponder) it to fix some issues.
 
 ## Configuration
 The responder itself can be configured with `appsettings.json` along with `OCSPR_...` environment variables, when configuration file is used, it is automatically reloaded on change.
-The web host is configured as a [normal ASP.NET Core app](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-6.0#host).
+The web host is configured as a normal ASP.NET Core app.
 For serverless containers compatibility, the `PORT` envvar is supported, which forces the responder to listen on `http://localhost:<PORT>`.
 
 ## Additional endpoints
