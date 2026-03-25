@@ -37,6 +37,7 @@ M:System.Threading.Thread.VolatileWrite(System.IntPtr@,System.IntPtr);Use Volati
 M:System.Threading.Thread.VolatileWrite(System.UIntPtr@,System.UIntPtr);Use Volatile.Write instead, this method is considered legacy
 P:System.DateTime.Now;Use System.TimeProvider.GetLocalNow()/GetLocalDateTime() instead
 P:System.DateTimeOffset.Now;Use System.TimeProvider.GetLocalNow() instead
+P:System.DateTimeOffset.Date;Do not use this property, since its value kind is DateTimeKind.Unspecified
 M:System.Random.#ctor();Use overload with specified seed instead
 M:System.Text.StringBuilder.Append(System.Object);Use AppendFormat(IFormatProvider,..) instead
 M:System.Text.StringBuilder.Append(System.SByte);Use AppendFormat(IFormatProvider,..) instead

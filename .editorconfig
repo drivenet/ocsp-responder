@@ -17,7 +17,7 @@ resharper_string_literal_typo_highlighting = do_not_show
 trim_trailing_whitespace = true
 
 
-[*.{xml,csproj,props,build,targets,config,ruleset,nuspec,resx,vsixmanifest,browser,wxs,wixproj}]
+[*.{xml,csproj,props,build,targets,config,ruleset,nuspec,resx,vsixmanifest,browser,wxs,wixproj,runsettings}]
 indent_size = 2
 
 

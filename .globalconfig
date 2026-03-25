@@ -296,6 +296,7 @@ dotnet_diagnostic.CA1002.severity = suggestion
 dotnet_code_quality.CA1002.api_surface = public, internal
 dotnet_diagnostic.CA1003.severity = suggestion
 dotnet_diagnostic.CA1008.severity = warning
+dotnet_code_quality.CA1008.additional_enum_none_names = Default
 dotnet_diagnostic.CA1012.severity = warning
 dotnet_diagnostic.CA1019.severity = warning
 dotnet_diagnostic.CA1024.severity = suggestion
