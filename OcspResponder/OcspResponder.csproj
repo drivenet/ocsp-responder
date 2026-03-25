@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>ocsp-responder</AssemblyName>
     <Version>1.3.2</Version>
-    <NoWarn>$(NoWarn);CA1848</NoWarn>
+    <NoWarn>$(NoWarn);CA1848;CA1873</NoWarn>
     <DefineConstants Condition="$(MinimalBuild) == true">$(DefineConstants);MINIMAL_BUILD</DefineConstants>
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
