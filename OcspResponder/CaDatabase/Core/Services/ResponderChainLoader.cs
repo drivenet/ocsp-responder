@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -21,10 +21,10 @@ internal sealed class ResponderChainLoader
 
     public (X509Certificate2 CaCertificate, X509Certificate2 ResponderCertificate) Load(string fileName)
     {
-        var certificates = new X509Certificate2Collection();
+        X509Certificate2Collection? certificates = null;
         try
         {
-            certificates.Import(
+            certificates = X509CertificateLoader.LoadPkcs12CollectionFromFile(
                 fileName,
                 _options.CurrentValue.CertificatePassword,
                 X509KeyStorageFlags.EphemeralKeySet | X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.Exportable);
@@ -44,9 +44,12 @@ internal sealed class ResponderChainLoader
         }
         catch (Exception exception)
         {
-            foreach (var certificate in certificates)
+            if (certificates is not null)
             {
-                certificate.Dispose();
+                foreach (var certificate in certificates)
+                {
+                    certificate.Dispose();
+                }
             }
 
             throw new InvalidDataException(Invariant($"Failed to load certificates from file \"{fileName}\"."), exception);
