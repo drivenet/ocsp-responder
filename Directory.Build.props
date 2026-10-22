@@ -1,6 +1,6 @@
-﻿<Project>
+<Project>
   <PropertyGroup Label="TopLevelPaths">
-    <DnetSharedPath>$(MSBuildThisFileDirectory)\shared</DnetSharedPath>
+    <DnetSharedPath>$(MSBuildThisFileDirectory)shared</DnetSharedPath>
   </PropertyGroup>
   <PropertyGroup Label="BuildAcceleration">
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>

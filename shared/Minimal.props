@@ -6,7 +6,7 @@
   <PropertyGroup Label="AvailableTargetFrameworks">
     <LegacyTargetFramework>net472</LegacyTargetFramework>
     <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
-    <ApplicationTargetFramework>net8.0</ApplicationTargetFramework>
+    <ApplicationTargetFramework>net10.0</ApplicationTargetFramework>
     <GeneratorTargetFramework>net472</GeneratorTargetFramework>
   </PropertyGroup>
 
@@ -17,6 +17,7 @@
     <Description>-</Description>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>latest</LangVersion>
+    <RollForward>latestMajor</RollForward>
     <Configurations>$(Configurations);Integration</Configurations>
     <DebugType>embedded</DebugType>
     <Deterministic>true</Deterministic>
@@ -67,7 +68,7 @@
 
   <ItemGroup Label="MinimalAnalyzerReferences">
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" PrivateAssets="All" />
     <PackageReference Include="ErrorProne.NET.CoreAnalyzers" Version="0.7.0-beta.1" PrivateAssets="All" />
     <PackageReference Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" PrivateAssets="All" />
   </ItemGroup>
